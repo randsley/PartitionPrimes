@@ -192,6 +192,8 @@ n·M₍₁,₁₎(n) = (1/22)·[ -21·M₍₃,₁₎(n) + 72·M₍₂,₂₎(n) 
                           + 24·M₍₃,₀₎(n) - 24·M₍₃,₀,₀₎(n) - 24·M₍₂,₁,₀₎(n)
                           + 24·M₍₂,₀,₁₎(n) - 72·M₍₁,₁,₁₎(n) ]
 ```
+**Verified in tests for n=1..50.** Requires the formula weight convention
+(v₁ = exponent of largest part) — see Implementation Notes.
 
 ### Quasi-shuffle product (p.12, explicit)
 ```
@@ -214,21 +216,29 @@ Tests that polynomial-coefficient expressions reduce to constant-coefficient for
 
 ---
 
-## Module Structure (Recommended)
+## Module Structure (Actual)
 
 ```
 src/
-  BernoulliNumbers.jl      # bernoulli(n), cached, exact Rational{BigInt}
-  QuasiShuffleAlgebra.jl   # Word, ZqElem, diamond_coeff, quasishuffle
-  ZqOperators.jl           # D operator (Option B then A), symmetrisation
-  MacMahon.jl              # M_direct, M_macmahonesque, closed forms M1/M2/M3
-  PrimeDetection.jl        # E1..E5, is_prime_partition, verify_range
+  QuasiShuffleAlgebra.jl   # Module definition, includes, exports
+  util.jl                  # Word, ZqElem, helpers, word enumeration
+  bernoulli.jl             # bernoulli(n), cached, exact Rational{BigInt}
+  diamond.jl               # diamond_coeffs, diamond (eq. 4.3)
+  quasishuffle.jl          # Memoized quasi-shuffle product
+  macmahon.jl              # σ, M1/M2/M3, M_direct, M_macmahonesque
+  d_operator.jl            # D operator (Option B) + RREF-based solver
+  symmetrisation.jl        # symmetrise (Theorem 4.4)
+  prime_detection.jl       # E1..E4, is_prime_partition, verify_range
+  conjecture.jl            # Computational test of the open conjecture
 test/
   test_bernoulli.jl        # B₀..B₂₀ against known values
   test_quasishuffle.jl     # paper's explicit examples
-  test_d_operator.jl       # n·M₍₁,₁₎(n) identity
-  test_prime_detection.jl  # E1 vs trial division up to 500
+  test_d_operator.jl       # numerical + paper's explicit decomposition (n=1..50)
+  test_prime_detection.jl  # E1 vs trial division up to 200
+  test_conjecture.jl       # conjecture infrastructure sanity checks
 ```
+
+**Test count:** 885 tests, ~2 minutes.
 
 ---
 
@@ -243,16 +253,67 @@ test/
 
 ---
 
+## Implementation Notes
+
+### M_macmahonesque Weight Convention (IMPORTANT)
+
+Definition (1.3) of the paper writes `m₁^v₁ · m₂^v₂ · … · mₐ^vₐ` with
+`0 < s₁ < s₂ < … < sₐ`, suggesting `v₁` is the exponent of `m₁` (multiplicity of
+the *smallest* part `s₁`).
+
+**Every formula in the paper that lists specific MacMahonesque words uses the
+opposite convention:** `v₁` is the exponent of the *largest* part `mₐ`. This was
+discovered by checking the D-operator identity on p.4 at n=4:
+
+- Under "definition" convention: LHS=12, RHS=180/11. ✗
+- Under "formula" convention (v₁ = largest part): LHS=12, RHS=12. ✓
+
+**The fix** (in `_macmahonesque_rec!`): use index `a - depth` instead of `depth + 1`
+when reading from `vec_a`. At depth 0 (smallest part), use `vec_a[a]`; at depth a−1
+(largest part), use `vec_a[1]`. Verified against the full paper formula for n=1..50.
+
+This convention mismatch likely arose because the proof iterates parts from largest
+to smallest (as is natural in the Bachmann–Kühn framework), but the definition
+notation goes smallest to largest.
+
+### D Operator: Underdetermined Systems
+
+The original solver required full column rank, failing with "Underdetermined system:
+rank k < n unknowns" because some MacMahonesque basis functions are linearly
+dependent as integer sequences. The fix: RREF on augmented matrix `[A | b]`,
+check consistency, return particular solution with free variables = 0. The resulting
+decomposition may differ in word representation from the paper's formula, but is
+numerically identical.
+
+---
+
 ## Open Conjecture (Computational Target)
 
 > *Any prime-detecting expression `E(n) = Σ pᵢ(n)·Mᵢ(n) ≥ 0` (vanishing precisely
 > at primes) is a Q[n]-linear combination of the five entries in Table 1.*
 
-To test this computationally:
-1. Fix degree bound `d` and part count bound `a`
-2. Enumerate all such expressions via the constraint equation (2.5) of the paper
-3. Check each against the span of Table 1 entries using rational row reduction
-4. A counterexample would be a significant mathematical finding
+Implemented in `src/conjecture.jl`. The approach:
+
+1. Fix degree bound `d` and weight bound `a_max`
+2. Build basis `B = {n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}`;
+   express E1–E4 as coefficient vectors in this basis
+3. Compute prime-vanishing subspace: null space of the prime evaluation matrix,
+   exact over ℚ via `rational_nullspace` (RREF-based)
+4. Check each null-space vector against the Table 1 span via `is_in_colspan`
+
+A counterexample coefficient vector = prime-detecting expression outside Table 1's
+span — a significant mathematical finding. Confirming up to large `(d, a_max)` is
+a meaningful contribution.
+
+**Usage:**
+```julia
+test_conjecture(2, 2; N=100)   # quick check covering E1
+test_conjecture(5, 5; N=300)   # covers all Table 1 entries
+scan_conjecture(6, 6)          # sweep grid, stop at first counterexample
+```
+
+Note: tests the linear (prime-vanishing) part of the conjecture. The non-negativity
+condition at composites is a separate positivity question.
 
 ---
 

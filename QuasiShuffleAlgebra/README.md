@@ -96,6 +96,15 @@ where the vector has a ones.
 Computed by `M_macmahonesque(vec_a, n)` where `vec_a` is a vector of
 non-negative integer exponents. Entries of 0 are valid: m^0 = 1.
 
+**Weight convention:** Despite definition (1.3) assigning v_1 to m_1 (the
+multiplicity of the *smallest* part), every formula in the paper — the D
+operator example, Ψ₁, Ψ₂, and the Table 1 entries — uses the *opposite*
+convention: v_1 is the exponent of the *largest* part. The implementation
+follows the paper's formula convention (vec_a[1] = exponent of largest part),
+which is the convention needed to make all identities check out numerically.
+This was confirmed by cross-checking the paper's formula for nM_{(1,1)}(n)
+at n = 4: the formula evaluates correctly only under this convention.
+
 ### Prime-Detecting Expressions
 
 For n >= 2, each expression below is non-negative and equals zero **if and only
@@ -348,6 +357,33 @@ symmetrise([1, 1, 3])
 # Dict([1, 1, 3] => 1, [1, 3, 1] => 1, [3, 1, 1] => 1)
 ```
 
+### Conjecture Testing
+
+```julia
+test_conjecture(d::Int, a_max::Int; N::Int=300, verbose::Bool=true) -> NamedTuple
+```
+
+Tests whether every prime-vanishing expression in the basis
+`{n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}` lies in the Q-span of the
+Table 1 entries E1–E4. Returns a NamedTuple with fields:
+`holds` (Bool), `dim_prime_vanishing`, `dim_table1_span`, and
+`counterexample` (a coefficient vector, or `nothing`).
+
+```julia
+scan_conjecture(d_max::Int, a_max::Int; N::Int=300)
+```
+
+Sweeps all `(d, a)` pairs with `1 ≤ d ≤ d_max`, `1 ≤ a ≤ a_max`, printing
+a result line for each and stopping at the first counterexample.
+
+**Example:**
+
+```julia
+test_conjecture(2, 2; N=100)   # quick check covering E1
+test_conjecture(5, 5; N=300)   # covers all Table 1 entries
+scan_conjecture(6, 6)          # systematic sweep
+```
+
 ### Prime Detection
 
 ```julia
@@ -407,22 +443,24 @@ QuasiShuffleAlgebra/
     diamond.jl              # Diamond product coefficients (eq. 4.3)
     quasishuffle.jl         # Memoized recursive quasi-shuffle product
     macmahon.jl             # σ, M1-M3, M_direct, M_macmahonesque
-    d_operator.jl           # D operator via exact rational Gaussian elimination
+    d_operator.jl           # D operator via exact rational RREF over Q
     symmetrisation.jl       # Symmetrised series (Theorem 4.4)
     prime_detection.jl      # E1-E4, is_prime_partition, verify_range
+    conjecture.jl           # Computational test of the open conjecture
   test/
     runtests.jl             # Test runner
     test_bernoulli.jl       # B_0 through B_20 against known values
     test_quasishuffle.jl    # Paper's explicit example + convolution identities
-    test_d_operator.jl      # Numerical verification for d_operator([1]) and [1,1]
+    test_d_operator.jl      # Numerical verification + paper's explicit decomposition
     test_prime_detection.jl # E1 vs trial division, M_direct consistency
+    test_conjecture.jl      # Infrastructure tests for conjecture machinery
   examples/
     demo.jl                 # Interactive demonstration script
 ```
 
 ## Testing
 
-Run the full test suite (663 tests, approximately 2 minutes):
+Run the full test suite (885 tests, approximately 2 minutes):
 
 ```bash
 cd QuasiShuffleAlgebra
@@ -435,8 +473,9 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 |------------|-------|------------------|
 | Bernoulli numbers | 21 | B_0 through B_20 against known values; B_odd = 0 for n > 1 |
 | Quasi-shuffle product | 54 | Explicit paper result for [1]*[1,1]; convolution identity for n=1:30; [1]*[1] matches power series convolution for n=1:20 |
-| D operator | 100 | d_operator([1]) and d_operator([1,1]) verified numerically for n=1:50 |
-| Prime detection | 488 | E1 = 0 iff prime for n=2:200; E1 >= 0 for n=2:100; M1 = sigma_1; M_direct = M_macmahonesque for a=1,2,3 and n=1:30 |
+| D operator | 150 | d_operator([1]) and [1,1] verified numerically for n=1:50; paper's explicit decomposition of nM_{(1,1)}(n) verified for n=1:50 |
+| Prime detection | 617 | E1 = 0 iff prime for n=2:200; E1 >= 0 for n=2:100; M1 = sigma_1; M_direct = M_macmahonesque for a=1,2,3 and n=1:30 |
+| Conjecture infrastructure | 43 | Basis evaluation, RREF, null space, rank, test_conjecture at (d=2,a=2) |
 
 ### Running Individual Tests
 
@@ -481,10 +520,13 @@ The `M_macmahonesque` function accepts a type parameter so it can return either
 
 ### Words with Zero Entries
 
-Words like `[3, 0]` are distinct from `[3]`. The former represents a two-part
-MacMahonesque function where the second multiplicity is raised to the power 0
-(i.e., m_2^0 = 1, so it simply counts valid partition structures). The D operator
+Words like `[3, 0]` are distinct from `[3]`. The former is a two-part
+MacMahonesque function where the *largest* part's multiplicity is cubed and the
+smallest part's multiplicity appears to the power 0 (= 1). The D operator
 produces such words naturally.
+
+Under the weight convention described above, `M_macmahonesque([3, 0], n)` sums
+m_largest^3 · m_smallest^0 = m_largest^3 over 2-strict-part partitions of n.
 
 ### Quasi-Shuffle Memoization
 
@@ -501,9 +543,14 @@ evaluates both sides numerically at enough points and solves the resulting
 overdetermined linear system exactly. This is more robust and easier to verify,
 at the cost of being computationally expensive for larger words.
 
-The system is solved using custom Gaussian elimination over `Rational{BigInt}`,
-since Julia's built-in `\` operator does not produce exact results for rational
-matrices.
+The system is solved using custom RREF-based Gaussian elimination over
+`Rational{BigInt}`. Julia's built-in `\` does not produce exact results for
+rational matrices. The solver handles underdetermined systems (which arise because
+some MacMahonesque basis functions are linearly dependent as integer sequences):
+it runs RREF on the augmented matrix `[A | b]`, checks consistency, and returns
+a particular solution with free variables set to zero. This means d_operator finds
+*a* valid decomposition, which may differ in its word representation from the
+specific decomposition listed in the paper — but both are numerically equivalent.
 
 ### Diamond Product Index Convention
 
@@ -530,6 +577,29 @@ These identities from the paper serve as ground truth for testing:
     (n^2 - 3n + 2)*M_1(n) - 8*M_2(n) = 0  iff  n is prime  (n >= 2)
 
 All three are verified exactly in the test suite.
+
+## Open Conjecture
+
+The paper states but does not prove:
+
+> Let P̃(x) = (p_1(x), …, p_a(x)) ∈ ℤ[x]^a be relatively prime integer polynomials.
+> For n ≥ 2, suppose E(n) = p_1(n)M_1(n) + ⋯ + p_a(n)M_a(n) ≥ 0 and vanishes
+> precisely on the primes. Then E(n) is a ℚ[n]-linear combination of the entries
+> in Table 1.
+
+This is a finite-dimensional linear algebra question for each fixed degree bound d
+(polynomial coefficients) and weight bound a_max (MacMahon functions). The function
+`test_conjecture(d, a_max)` tests it computationally by:
+
+1. Building the basis `{n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}`
+2. Finding the prime-vanishing subspace (null space of the evaluation matrix at
+   primes, computed exactly over ℚ)
+3. Checking whether every basis vector of that null space lies in the ℚ-span of
+   Table 1 entries, using rational row reduction
+
+A counterexample at any `(d, a_max)` would be a significant mathematical finding.
+Confirming the conjecture up to large `(d, a_max)` is a meaningful computational
+contribution.
 
 ## References
 
