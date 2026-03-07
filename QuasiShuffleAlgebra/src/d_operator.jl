@@ -1,62 +1,50 @@
 """
     rational_solve(A, b) -> Vector{Rational{BigInt}}
 
-Solve A*x = b exactly over Rational{BigInt} using Gaussian elimination.
+Solve A*x = b exactly over Q using RREF on the augmented matrix [A | b].
+Handles overdetermined and underdetermined systems:
+  - Overdetermined: checks consistency, then solves.
+  - Underdetermined: returns a particular solution with free variables set to zero.
+Throws an error if the system is inconsistent (no solution exists).
 """
 function rational_solve(A::Matrix{Rational{BigInt}}, b::Vector{Rational{BigInt}})
     m, n = size(A)
     aug = hcat(copy(A), reshape(copy(b), m, 1))
 
-    pivot_row = 1
+    # RREF on augmented matrix
     pivot_cols = Int[]
-    for col in 1:n
-        found = 0
+    pivot_row = 1
+    for col in 1:(n + 1)
+        piv = 0
         for row in pivot_row:m
             if !iszero(aug[row, col])
-                found = row
+                piv = row
                 break
             end
         end
-        found == 0 && continue
+        piv == 0 && continue
 
-        if found != pivot_row
-            for j in 1:(n+1)
-                aug[pivot_row, j], aug[found, j] = aug[found, j], aug[pivot_row, j]
-            end
+        # If pivot is in the RHS column, the system is inconsistent
+        col == n + 1 && error("No exact solution (inconsistent system)")
+
+        aug[[pivot_row, piv], :] = aug[[piv, pivot_row], :]
+        aug[pivot_row, :] ./= aug[pivot_row, col]
+        for row in 1:m
+            row == pivot_row && continue
+            iszero(aug[row, col]) && continue
+            aug[row, :] .-= aug[row, col] .* aug[pivot_row, :]
         end
-
         push!(pivot_cols, col)
-        piv = aug[pivot_row, col]
-        for row in (pivot_row + 1):m
-            if !iszero(aug[row, col])
-                factor = aug[row, col] // piv
-                for j in col:(n + 1)
-                    aug[row, j] -= factor * aug[pivot_row, j]
-                end
-            end
-        end
         pivot_row += 1
+        pivot_row > m && break
     end
 
-    rank = length(pivot_cols)
-    for row in (rank + 1):m
-        if !iszero(aug[row, n + 1])
-            error("No exact solution (inconsistent)")
-        end
-    end
-
-    rank == n || error("Underdetermined system: rank $rank < $n unknowns; basis may be incomplete")
-
+    # Check consistency: any row [0 ... 0 | nonzero] would have been caught above.
+    # Read off particular solution (free variables = 0).
     x = zeros(Rational{BigInt}, n)
-    for k in rank:-1:1
-        col = pivot_cols[k]
-        s = aug[k, n + 1]
-        for j in (k + 1):rank
-            s -= aug[k, pivot_cols[j]] * x[pivot_cols[j]]
-        end
-        x[col] = s // aug[k, col]
+    for (r, col) in enumerate(pivot_cols)
+        x[col] = aug[r, n + 1]
     end
-
     return x
 end
 
