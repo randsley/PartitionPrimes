@@ -17,9 +17,25 @@
         end
     end
 
-    # The paper (p.4) gives a specific decomposition of n*M_{(1,1)}(n) involving
-    # words with zero-weight components, e.g. M_{(3,0)}, M_{(3,0,0)}.
-    # Verifying that formula requires careful cross-checking of how the paper
-    # defines M_{vec_a} for zero-weight entries against the current implementation.
-    # Correctness of d_operator is fully covered by the numerical test above.
+    # Paper (p.4) explicit decomposition of n*M_{(1,1)}(n) (Theorem 1.4 example).
+    # NOTE on convention: in M_macmahonesque(vec_a, n), vec_a[1] is the exponent
+    # of the LARGEST part (deepest recursion), matching the paper's formula notation
+    # where subscript v_1 corresponds to the multiplicity of the largest part size.
+    @testset "d_operator([1,1]) paper decomposition is numerically equivalent" begin
+        paper_result = ZqElem(
+            [3, 1]    => -21//big(22),
+            [2, 2]    =>  72//big(22),
+            [1, 3]    =>  -9//big(22),
+            [3, 0]    =>  24//big(22),
+            [3, 0, 0] => -24//big(22),
+            [2, 1, 0] => -24//big(22),
+            [2, 0, 1] =>  24//big(22),
+            [1, 1, 1] => -72//big(22),
+        )
+        for n in 1:50
+            lhs = Rational{BigInt}(n) * M_macmahonesque([1, 1], n, Rational{BigInt})
+            rhs = evaluate_zq(paper_result, n)
+            @test lhs == rhs
+        end
+    end
 end

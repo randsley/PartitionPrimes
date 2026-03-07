@@ -80,7 +80,7 @@ end
 
 function _macmahonesque_rec!(vec_a, a, target, depth, min_s, wprod::T, acc) where T
     if depth == a - 1
-        v = vec_a[depth + 1]
+        v = vec_a[a - depth]   # vec_a[1]: weight of largest part (depth a-1)
         for s in min_s:target
             if target % s == 0
                 m = target ÷ s
@@ -89,7 +89,7 @@ function _macmahonesque_rec!(vec_a, a, target, depth, min_s, wprod::T, acc) wher
         end
         return
     end
-    v = vec_a[depth + 1]
+    v = vec_a[a - depth]       # vec_a[a]: weight of smallest part (depth 0)
     remaining_parts = a - depth
     for s in min_s:(target ÷ remaining_parts)
         for m in 1:(target ÷ s - (remaining_parts - 1))
