@@ -1,0 +1,6 @@
+name = "PartitionPrimes"
+uuid = "80ab46c8-c488-4996-95b5-c9c978a1196a"
+version = "0.1.0"
+
+[compat]
+julia = "1.6"
