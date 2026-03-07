@@ -255,7 +255,8 @@ end
     test_conjecture(d, a_max; N=300, verbose=true) -> NamedTuple
 
 Test whether every prime-vanishing expression in basis B = {n^k·M_a : k≤d, a≤a_max}
-lies in the Q-span of Table 1 entries E1..E5.
+lies in the Q[n]-span of Table 1 entries E1..E5 (i.e., Q-linear combinations of
+n^j·Eᵢ for j=0..d, i=1..5).
 
 Keyword arguments:
   N       — evaluate at n = 2..N (more = more reliable null space)
@@ -294,13 +295,37 @@ function test_conjecture(d::Int, a_max::Int;
                 counterexample=nothing)
     end
 
-    # Step 3: Table 1 coefficient vectors → evaluate at all n to get column vectors
-    t1_coeffs = table1_coeffs(d, a_max)      # (dim_basis × 5)
-    all_mat   = eval_matrix(d, a_max, ns)    # (length(ns) × dim_basis)
-    t1_vals   = all_mat * t1_coeffs          # (length(ns) × 5)
+    # Step 3: Table 1 Q[n]-span: include n^j · Eᵢ(n) for j=0..d, i=1..5
+    # The conjecture asserts Q[n]-linear combinations of Table 1 entries,
+    # so n·E1, n²·E1, n·E2, … are all valid generators.
+    #
+    # IMPORTANT: evaluate E1..E4 directly (not via truncated coefficient vectors).
+    # table1_coeffs silently drops terms with k>d or a>a_max, so using
+    # all_mat * t1c would give wrong values when E_i has degree > d.
+    all_mat = eval_matrix(d, a_max, ns)      # (length(ns) × dim_basis)
+    E_funcs = [E1, E2, E3, E4]
+    t1_base = zeros(Rational{BigInt}, length(ns), 5)
+    for (i, n) in enumerate(ns)
+        for (fi, Ef) in enumerate(E_funcs)
+            t1_base[i, fi] = Rational{BigInt}(Ef(n))
+        end
+        # E5: zero placeholder (not yet known)
+    end
+
+    # Build Q[n]-span: columns are n^j · Eᵢ(n) for j=0..d, i=1..5
+    ns_big = Rational{BigInt}[big(n) for n in ns]
+    n_powers = [ns_big .^ j for j in 0:d]   # d+1 vectors, each length(ns)
+    t1_qn_cols = Vector{Rational{BigInt}}[]
+    for j in 0:d
+        pow = n_powers[j+1]
+        for i in 1:5
+            push!(t1_qn_cols, pow .* t1_base[:, i])
+        end
+    end
+    t1_vals = hcat(t1_qn_cols...)            # (length(ns) × 5*(d+1))
 
     dim_t1 = rank_over_Q(copy(t1_vals))
-    verbose && @printf("Table 1 span rank (within bounds): %d\n", dim_t1)
+    verbose && @printf("Table 1 Q[n]-span rank (within bounds): %d\n", dim_t1)
 
     # Check each null space vector
     counterexample = nothing
