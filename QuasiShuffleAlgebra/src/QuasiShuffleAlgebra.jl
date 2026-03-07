@@ -20,6 +20,7 @@ include("macmahon.jl")
 include("d_operator.jl")
 include("symmetrisation.jl")
 include("prime_detection.jl")
+include("conjecture.jl")
 
 export Word, ZqElem
 export zq_add, zq_scale, zq_multiply, cleanup!, evaluate_zq, all_words_up_to_weight
@@ -30,5 +31,8 @@ export σ, M1, M2, M3, M_direct, M_macmahonesque
 export d_operator
 export symmetrise
 export E1, E2, E3, E4, is_prime_partition, verify_range, is_prime_trial
+export build_basis, eval_matrix, table1_coeffs
+export rational_rref!, rational_nullspace, rank_over_Q, is_in_colspan
+export test_conjecture, scan_conjecture
 
 end
