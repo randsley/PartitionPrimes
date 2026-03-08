@@ -28,6 +28,18 @@
         end
     end
 
+    # E5 vanishes at primes, non-negative at small composites
+    @testset "E5 vanishes at primes" begin
+        for p in [2, 3, 5, 7, 11, 13, 17, 19, 23]
+            @test iszero(E5(p))
+        end
+    end
+    @testset "E5 non-negative at small composites" begin
+        for n in [4, 6, 8, 9, 10, 12, 14, 16, 18, 20, 25]
+            @test E5(n) >= 0
+        end
+    end
+
     # M_direct consistency with M_macmahonesque
     @testset "M_direct vs M_macmahonesque" begin
         for n in 1:30

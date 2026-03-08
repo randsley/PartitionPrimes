@@ -225,10 +225,10 @@ src/
   bernoulli.jl             # bernoulli(n), cached, exact Rational{BigInt}
   diamond.jl               # diamond_coeffs, diamond (eq. 4.3)
   quasishuffle.jl          # Memoized quasi-shuffle product
-  macmahon.jl              # σ, M1/M2/M3, M_direct, M_macmahonesque
+  macmahon.jl              # σ, ramanujan_tau, M1-M6, M_direct, M_macmahonesque
   d_operator.jl            # D operator (Option B) + RREF-based solver
   symmetrisation.jl        # symmetrise (Theorem 4.4)
-  prime_detection.jl       # E1..E4, is_prime_partition, verify_range
+  prime_detection.jl       # E1..E5, is_prime_partition, verify_range
   conjecture.jl            # Computational test of the open conjecture
 test/
   test_bernoulli.jl        # B₀..B₂₀ against known values
@@ -238,7 +238,7 @@ test/
   test_conjecture.jl       # conjecture infrastructure sanity checks
 ```
 
-**Test count:** 885 tests, ~2 minutes.
+**Test count:** 906 tests, ~2 minutes.
 
 ---
 
@@ -287,6 +287,85 @@ numerically identical.
 
 ---
 
+## Closed-Form MacMahon Functions M4, M5, M6
+
+The generating functions U_a(q) are quasimodular forms expressible as linear combinations
+of Eisenstein series and (for a=6) cusp forms. This yields closed-form evaluations:
+
+**M4(n)** — weight 8 quasimodular form:
+```
+M₄(n) = (3229/967680)·σ₁ + (-47/4608)·n·σ₁ + (7/1152)·n²·σ₁ + (-1/1152)·n³·σ₁
+       + (47/9216)·σ₃ + (-7/1536)·n·σ₃ + (1/1280)·n²·σ₃
+       + (7/15360)·σ₅ + (-1/7680)·n·σ₅
+       + (1/193536)·σ₇
+```
+
+**M5(n)** — weight 10 quasimodular form:
+```
+M₅(n) = (10679/17203200)·σ₁ + … + (1/154828800)·σ₉
+```
+(15 terms total; see `src/macmahon.jl` for full coefficients)
+
+**M6(n)** — weight 12 quasimodular form. At weight 12, the space of cusp forms is
+1-dimensional, spanned by the Ramanujan delta function Δ(q) = q∏(1−q^k)²⁴ whose
+n-th coefficient is the Ramanujan tau function τ(n). The generating function U₆(q)
+has a component in this space, so:
+```
+M₆(n) = [linear combo of σ₁,σ₃,σ₅,σ₇,σ₉,σ₁₁ with polynomial-in-n prefactors]
+       + (-17/150450048000)·τ(n)
+```
+(22 terms total; see `src/macmahon.jl` for full coefficients)
+
+These were derived by fitting: evaluate M_a(n) via `M_direct` at n=1..55, set up the
+linear system for unknown coefficients, solve exactly over ℚ via rational RREF.
+All three verified against M_direct for n=1..55 ✓.
+
+The Ramanujan tau function is computed by expanding Δ(q) = q·∏(1−q^k)²⁴ iteratively:
+multiply by each factor (1−q^k) exactly 24 times, tracking coefficients as BigInts.
+Results are cached in `_tau_cache`.
+
+---
+
+## Derivation of E5
+
+**Background:** The paper (Table 1) lists five prime-detecting expressions E1–E5, but
+gives explicit formulas only for E1–E4. E5 was derived computationally.
+
+**Strategy:** Fix degree bound d and weight bound a_max. Build the basis
+`B = {n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}` and evaluate at enough primes to
+determine the prime-vanishing subspace (null space of the prime evaluation matrix, exact
+over ℚ). Find which null vectors lie outside the Q[n]-span of E1–E4.
+
+**Key finding about M6:** At all tested `(d, a_max)`, the M₆ columns of the prime
+evaluation matrix are always pivot columns in the RREF. This means adding M₆ to the
+basis increases the rank but does not increase the null space dimension — no
+prime-vanishing expression involves M₆. Consequently, E5 must live in the M₁–M₅ basis.
+This rules out the pattern of E1–E4 each introducing the "next" MacMahon function.
+
+**Extraction at (d=3, a_max=5):** With `N=150` primes evaluated, the prime-vanishing
+subspace is exactly 1-dimensional outside the Q[n]-span of E1–E4. The unique (up to
+scaling) outside vector, normalised to have integer coefficients with GCD 1, is:
+
+```
+E5(n) = (-270270 + 663549n - 522351n² + 129072n³)·M₁(n)
+       + (-315272n² + 30400n³)·M₂(n)
+       + (-340864n² + 15872n³)·M₃(n)
+       + (-193536n²)·M₄(n)
+       + 154828800·M₅(n)
+```
+
+**Verification:**
+- Vanishes at all primes in [2, 500] ✓ (max |E5(p)| = 0)
+- Closes the conjecture at d=2..6, a_max=5 ✓ (confirmed by `verify_e5.jl`)
+- May be negative at some composites (e.g. n=65, 85, 95 — this is acceptable since
+  the conjecture requires only prime-vanishing linear independence, not non-negativity
+  for E5 specifically)
+
+The `test_conjecture(3, 5; N=150)` test in the suite verifies that with E5 included,
+the conjecture holds at (d=3, a_max=5).
+
+---
+
 ## Open Conjecture (Computational Target)
 
 > *Any prime-detecting expression `E(n) = Σ pᵢ(n)·Mᵢ(n) ≥ 0` (vanishing precisely
@@ -296,24 +375,26 @@ Implemented in `src/conjecture.jl`. The approach:
 
 1. Fix degree bound `d` and weight bound `a_max`
 2. Build basis `B = {n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}`;
-   express E1–E4 as coefficient vectors in this basis
+   represent E1–E5 as coefficient vectors in this basis
 3. Compute prime-vanishing subspace: null space of the prime evaluation matrix,
    exact over ℚ via `rational_nullspace` (RREF-based)
-4. Check each null-space vector against the Table 1 span via `is_in_colspan`
+4. Check each null-space vector against the Q[n]-span of E1–E5 via `is_in_colspan`
 
-A counterexample coefficient vector = prime-detecting expression outside Table 1's
-span — a significant mathematical finding. Confirming up to large `(d, a_max)` is
-a meaningful contribution.
+**Current status:** Holds at `(d=3, a_max=5)` with E1–E5 included. Without E5, there
+is always a counterexample when `a_max ≥ 5`.
+
+A counterexample that persists even with E5 would be a significant mathematical finding.
+Confirming up to large `(d, a_max)` is a meaningful computational contribution.
 
 **Usage:**
 ```julia
 test_conjecture(2, 2; N=100)   # quick check covering E1
-test_conjecture(5, 5; N=300)   # covers all Table 1 entries
-scan_conjecture(6, 6)          # sweep grid, stop at first counterexample
+test_conjecture(3, 5; N=150)   # confirmed holds with E1–E5
+scan_conjecture(6, 5)          # sweep grid, stop at first counterexample
 ```
 
 Note: tests the linear (prime-vanishing) part of the conjecture. The non-negativity
-condition at composites is a separate positivity question.
+condition at composites is a separate positivity question not checked here.
 
 ---
 

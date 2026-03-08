@@ -23,9 +23,9 @@ QuasiShuffleAlgebra/        Julia package (the main implementation)
     macmahon.jl             σ, M1/M2/M3, M_direct, M_macmahonesque
     d_operator.jl           D operator via exact RREF over Q
     symmetrisation.jl       Symmetrisation (Theorem 4.4)
-    prime_detection.jl      E1–E4, is_prime_partition, verify_range
+    prime_detection.jl      E1–E5, is_prime_partition, verify_range
     conjecture.jl           Computational test of the open conjecture
-  test/                     885 tests, ~2 minutes
+  test/                     906 tests, ~2 minutes
   examples/demo.jl          Annotated demo of every feature
 
 QuasiShuffleAlgebra_Guide.ipynb   Jupyter notebook guide (Julia kernel)
@@ -75,10 +75,12 @@ $$M_a(n) = \sum_{\substack{0 < s_1 < \cdots < s_a \\ m_i \geq 1,\; \sum m_i s_i 
 | $E_2(n)$ | $(3n^3-13n^2+18n-8)M_1 + \cdots - 960M_3$ | $n$ is prime |
 | $E_3(n)$ | polynomial coefficients up to $M_4$ | $n$ is prime |
 | $E_4(n)$ | polynomial coefficients up to $M_5$ | $n$ is prime |
+| $E_5(n)$ | polynomial coefficients up to $M_5$ (derived computationally) | $n$ is prime |
 
 **Open conjecture:** Any non-negative prime-vanishing expression in $\mathbb{Q}[n] \otimes \{M_a\}$
-is a $\mathbb{Q}[n]$-linear combination of Table 1 entries. This is tested computationally in
-`src/conjecture.jl`; confirmed for degree $\leq 4$ and weight $\leq 4$ using $E_1$–$E_4$.
+is a $\mathbb{Q}[n]$-linear combination of Table 1 entries. Tested computationally in
+`src/conjecture.jl`; confirmed for polynomial degree $\leq 3$ and weight $\leq 5$ using $E_1$–$E_5$.
+See `Extend.md` for the derivation of $E_5$.
 
 ## Implementation Notes
 

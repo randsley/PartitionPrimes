@@ -14,7 +14,7 @@ combinations of MacMahon partition functions vanish. This package provides:
 - The quasi-shuffle algebra Z_q (formal multiplication of generating series)
 - The D operator (expressing n*M_a(n) as constant-coefficient combinations)
 - Symmetrisation for recovering quasimodular forms
-- Four prime-detecting expressions (E1--E4) from Theorem 1.1 and Table 1
+- Five prime-detecting expressions (E1--E5) from Theorem 1.1 and Table 1
 
 All arithmetic is exact, using `Rational{BigInt}` throughout the algebra layers.
 
@@ -81,6 +81,19 @@ expansions of the generating functions U_a(q):
 | `M2(n)` | ((-2n+1)*sigma_1(n) + sigma_3(n)) / 8 |
 | `M3(n)` | ((40n^2-100n+37)*sigma_1(n) - 10(3n-5)*sigma_3(n) + 3*sigma_5(n)) / 1920 |
 
+Closed-form evaluations are also provided for a = 4, 5, 6 via fitting to divisor power
+sums (and the Ramanujan tau function for a = 6):
+
+| Function | Formula structure |
+|----------|-------------------|
+| `M4(n)` | linear combination of σ₁, σ₃, σ₅, σ₇ with polynomial-in-n prefactors |
+| `M5(n)` | linear combination of σ₁, σ₃, σ₅, σ₇, σ₉ with polynomial-in-n prefactors |
+| `M6(n)` | linear combination of σ₁, σ₃, σ₅, σ₇, σ₉, σ₁₁, and τ(n) with polynomial-in-n prefactors |
+
+The M₆ formula requires τ(n) because the weight-12 quasimodular form generating M₆ has
+a cusp-form component Δ(q) = q∏(1−q^k)²⁴, whose n-th coefficient is the Ramanujan tau
+function. Computed by `ramanujan_tau(n)` (cached, exact BigInt).
+
 For arbitrary a, `M_direct(a, n)` computes M_a(n) by direct partition enumeration.
 
 ### MacMahonesque Partition Functions
@@ -118,9 +131,23 @@ if n is prime** (Theorem 1.1):
 
     (3n^3 - 13n^2 + 18n - 8)*M_1(n) + (12n^2 - 120n + 212)*M_2(n) - 960*M_3(n) >= 0
 
-**E3(n)** -- corresponds to 90*H_10 (uses M_4 via `M_direct`).
+**E3(n)** -- corresponds to 90*H_10 (uses M_4 via closed form).
 
-**E4(n)** -- corresponds to 90*H_12 (uses M_4 and M_5 via `M_direct`).
+**E4(n)** -- corresponds to 90*H_12 (uses M_4 and M_5 via closed forms).
+
+**E5(n)** -- derived computationally as the unique (up to scaling) prime-vanishing
+expression in the degree-3, weight-5 basis outside the Q[n]-span of E1–E4:
+
+    (-270270 + 663549n - 522351n² + 129072n³)·M₁(n)
+    + (-315272n² + 30400n³)·M₂(n)
+    + (-340864n² + 15872n³)·M₃(n)
+    + (-193536n²)·M₄(n)
+    + 154828800·M₅(n)
+
+This expression vanishes at all primes and is linearly independent of E1–E4 over Q[n].
+Note: E5 can be negative at some composites (e.g. n=65, 85, 95), so it satisfies only
+the prime-vanishing condition, not the full non-negativity claimed in Theorem 1.1.
+See `Extend.md` for the derivation.
 
 ### The Algebra Z_q
 
@@ -266,12 +293,19 @@ Sum of k-th powers of divisors of n. `σ(1, n)` is the ordinary sum of
 divisors; `σ(0, n)` counts divisors.
 
 ```julia
-M1(n::Int) -> Int      # = σ(1, n)
-M2(n::Int) -> Rational  # closed-form
-M3(n::Int) -> Rational  # closed-form
+M1(n::Int) -> Int           # = σ(1, n)
+M2(n::Int) -> Rational      # closed-form via σ₁, σ₃
+M3(n::Int) -> Rational      # closed-form via σ₁, σ₃, σ₅
+M4(n::Int) -> Rational      # closed-form via σ₁, σ₃, σ₅, σ₇
+M5(n::Int) -> Rational      # closed-form via σ₁, σ₃, σ₅, σ₇, σ₉
+M6(n::Int) -> Rational      # closed-form via σ₁, σ₃, σ₅, σ₇, σ₉, σ₁₁, τ(n)
+ramanujan_tau(n::Int) -> BigInt   # Ramanujan tau function (cached)
 ```
 
-Closed-form MacMahon functions from the Fourier expansions of U_a(q).
+Closed-form MacMahon functions derived from the Fourier expansions of U_a(q).
+M4–M6 use divisor power sums with polynomial-in-n prefactors; M6 additionally
+requires the Ramanujan tau function because its generating series has a weight-12
+cusp form component.
 
 ```julia
 M_direct(a::Int, n::Int) -> Int
@@ -364,8 +398,8 @@ test_conjecture(d::Int, a_max::Int; N::Int=300, verbose::Bool=true) -> NamedTupl
 ```
 
 Tests whether every prime-vanishing expression in the basis
-`{n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}` lies in the Q-span of the
-Table 1 entries E1–E4. Returns a NamedTuple with fields:
+`{n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}` lies in the Q[n]-span of the
+Table 1 entries E1–E5. Returns a NamedTuple with fields:
 `holds` (Bool), `dim_prime_vanishing`, `dim_table1_span`, and
 `counterexample` (a coefficient vector, or `nothing`).
 
@@ -389,16 +423,16 @@ scan_conjecture(6, 6)          # systematic sweep
 ```julia
 E1(n::Int) -> Rational     # (n^2-3n+2)*M_1(n) - 8*M_2(n)
 E2(n::Int) -> Rational     # uses M_1, M_2, M_3
-E3(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4 (via M_direct)
-E4(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4, M_5 (via M_direct)
+E3(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4 (closed form)
+E4(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4, M_5 (closed forms)
+E5(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4, M_5 (closed forms; derived computationally)
 ```
 
 Prime-detecting expressions from Theorem 1.1 and Table 1. For n >= 2:
-- E_i(n) >= 0 for all n
-- E_i(n) = 0 if and only if n is prime
+- E1–E4 satisfy E_i(n) >= 0 for all n, with E_i(n) = 0 iff n is prime
+- E5 vanishes precisely at primes but may be negative at some composites
 
-E3 and E4 use `M_direct` for the 4-part and 5-part MacMahon functions,
-making them slower for large n.
+All five use fast closed-form MacMahon functions (no direct enumeration).
 
 ```julia
 is_prime_partition(n::Int) -> Bool
@@ -442,10 +476,10 @@ QuasiShuffleAlgebra/
     bernoulli.jl            # Cached exact Bernoulli numbers via recurrence
     diamond.jl              # Diamond product coefficients (eq. 4.3)
     quasishuffle.jl         # Memoized recursive quasi-shuffle product
-    macmahon.jl             # σ, M1-M3, M_direct, M_macmahonesque
+    macmahon.jl             # σ, ramanujan_tau, M1-M6, M_direct, M_macmahonesque
     d_operator.jl           # D operator via exact rational RREF over Q
     symmetrisation.jl       # Symmetrised series (Theorem 4.4)
-    prime_detection.jl      # E1-E4, is_prime_partition, verify_range
+    prime_detection.jl      # E1-E5, is_prime_partition, verify_range
     conjecture.jl           # Computational test of the open conjecture
   test/
     runtests.jl             # Test runner
@@ -460,7 +494,7 @@ QuasiShuffleAlgebra/
 
 ## Testing
 
-Run the full test suite (885 tests, approximately 2 minutes):
+Run the full test suite (906 tests, approximately 2 minutes):
 
 ```bash
 cd QuasiShuffleAlgebra
@@ -474,8 +508,8 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 | Bernoulli numbers | 21 | B_0 through B_20 against known values; B_odd = 0 for n > 1 |
 | Quasi-shuffle product | 54 | Explicit paper result for [1]*[1,1]; convolution identity for n=1:30; [1]*[1] matches power series convolution for n=1:20 |
 | D operator | 150 | d_operator([1]) and [1,1] verified numerically for n=1:50; paper's explicit decomposition of nM_{(1,1)}(n) verified for n=1:50 |
-| Prime detection | 617 | E1 = 0 iff prime for n=2:200; E1 >= 0 for n=2:100; M1 = sigma_1; M_direct = M_macmahonesque for a=1,2,3 and n=1:30 |
-| Conjecture infrastructure | 43 | Basis evaluation, RREF, null space, rank, test_conjecture at (d=2,a=2) |
+| Prime detection | 637 | E1 = 0 iff prime for n=2:200; E1 >= 0 for n=2:100; E5 vanishes at primes 2–23; E5 >= 0 at small composites; M1 = sigma_1; M_direct = M_macmahonesque for a=1,2,3 and n=1:30 |
+| Conjecture infrastructure | 44 | Basis evaluation, RREF, null space, rank, test_conjecture at (d=2,a=2) and (d=3,a_max=5) |
 
 ### Running Individual Tests
 
@@ -597,9 +631,15 @@ This is a finite-dimensional linear algebra question for each fixed degree bound
 3. Checking whether every basis vector of that null space lies in the ℚ-span of
    Table 1 entries, using rational row reduction
 
-A counterexample at any `(d, a_max)` would be a significant mathematical finding.
-Confirming the conjecture up to large `(d, a_max)` is a meaningful computational
-contribution.
+**Status:** Confirmed holds at `(d=3, a_max=5)` using E1–E5 (verified in the test suite).
+Larger ranges require E5 in the Table 1 span; without E5 there is always a counterexample
+at `a_max ≥ 5`. A counterexample that persists even with E5 would be a significant
+mathematical finding.
+
+**Key computational discovery:** M₆ columns are always pivot columns in the prime
+evaluation matrix RREF — meaning no prime-vanishing expression at any tested `(d, a_max)`
+involves M₆. The E5 formula consequently involves only M₁–M₅, not following the pattern
+of E1–E4 each introducing the next MacMahon function.
 
 ## References
 

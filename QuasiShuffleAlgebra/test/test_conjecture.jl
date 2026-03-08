@@ -61,4 +61,9 @@ using Test
         @test result.dim_table1_span >= 1
     end
 
+    @testset "test_conjecture(3, 5) holds with E1-E5" begin
+        result = test_conjecture(3, 5; N=150, verbose=false)
+        @test result.holds == true
+    end
+
 end

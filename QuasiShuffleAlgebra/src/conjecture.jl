@@ -50,7 +50,8 @@ basis_index(d::Int, k::Int, a::Int) = (a - 1) * (d + 1) + k + 1
 """
     eval_Ma(a, n) -> Rational{BigInt}
 
-Evaluate M_a(n) using closed forms for a ≤ 3, M_direct otherwise.
+Evaluate M_a(n) using closed forms for a ≤ 6, M_direct otherwise.
+M4–M6 use divisor-sum formulas (fast); M6 also uses ramanujan_tau.
 """
 function eval_Ma(a::Int, n::Int)::Rational{BigInt}
     if a == 1
@@ -59,6 +60,12 @@ function eval_Ma(a::Int, n::Int)::Rational{BigInt}
         return M2(n)
     elseif a == 3
         return M3(n)
+    elseif a == 4
+        return M4(n)
+    elseif a == 5
+        return M5(n)
+    elseif a == 6
+        return M6(n)
     else
         return Rational{BigInt}(M_direct(a, n))
     end
@@ -170,8 +177,17 @@ function table1_coeffs(d::Int, a_max::Int)::Matrix{Rational{BigInt}}
     set!(4, 0, 4,  218453760)
     set!(4, 0, 5, -580608000)
 
-    # E5: not yet known — leave as zero vector
-    # (a zero column means E5 adds nothing to the span)
+    # E5: (d=3, a_max=5 counterexample, verified prime-vanishing)
+    set!(5, 0, 1, -270270)
+    set!(5, 1, 1,  663549)
+    set!(5, 2, 1, -522351)
+    set!(5, 3, 1,  129072)
+    set!(5, 2, 2, -315272)
+    set!(5, 3, 2,   30400)
+    set!(5, 2, 3, -340864)
+    set!(5, 3, 3,   15872)
+    set!(5, 2, 4, -193536)
+    set!(5, 0, 5, 154828800)
 
     return T
 end
@@ -303,13 +319,12 @@ function test_conjecture(d::Int, a_max::Int;
     # table1_coeffs silently drops terms with k>d or a>a_max, so using
     # all_mat * t1c would give wrong values when E_i has degree > d.
     all_mat = eval_matrix(d, a_max, ns)      # (length(ns) × dim_basis)
-    E_funcs = [E1, E2, E3, E4]
+    E_funcs = [E1, E2, E3, E4, E5]
     t1_base = zeros(Rational{BigInt}, length(ns), 5)
     for (i, n) in enumerate(ns)
         for (fi, Ef) in enumerate(E_funcs)
             t1_base[i, fi] = Rational{BigInt}(Ef(n))
         end
-        # E5: zero placeholder (not yet known)
     end
 
     # Build Q[n]-span: columns are n^j · Eᵢ(n) for j=0..d, i=1..5

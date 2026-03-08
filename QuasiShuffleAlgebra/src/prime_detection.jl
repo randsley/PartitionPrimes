@@ -11,7 +11,7 @@ function E2(n::Int)
 end
 
 function E3(n::Int)
-    m4 = M_direct(4, n)
+    m4 = M4(n)
     return (25n^4 - 171n^3 + 423n^2 - 447n + 170) * M1(n) +
            (300n^3 - 3554n^2 + 12900n - 14990) * M2(n) +
            (2400n^2 - 60480n + 214080) * M3(n) -
@@ -19,13 +19,27 @@ function E3(n::Int)
 end
 
 function E4(n::Int)
-    m4 = M_direct(4, n)
-    m5 = M_direct(5, n)
+    m4 = M4(n)
+    m5 = M5(n)
     return (126n^5 - 1303n^4 + 5073n^3 - 9323n^2 + 8097n - 2670) * M1(n) +
            (3024n^4 - 48900n^3 + 288014n^2 - 737100n + 695490) * M2(n) +
            (60480n^3 - 1510080n^2 + 10644480n - 23496480) * M3(n) +
            (725760n^2 - 36288000n + 218453760) * m4 -
            580608000 * m5
+end
+
+function E5(n::Int)
+    m3 = M3(n)
+    m4 = M4(n)
+    m5 = M5(n)
+    bn = big(n)
+    return (
+        (-270270 + 663549*bn - 522351*bn^2 + 129072*bn^3) * M1(n)
+        + (-315272*bn^2 + 30400*bn^3) * M2(n)
+        + (-340864*bn^2 + 15872*bn^3) * m3
+        + (-193536*bn^2) * m4
+        + 154828800 * m5
+    )
 end
 
 function is_prime_trial(n::Int)::Bool
