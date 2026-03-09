@@ -228,6 +228,14 @@ By appending $E_5(n)$, this gap is resolved. We verified the conjecture computat
 
 In every case, the prime-vanishing subspace is entirely contained in the $\mathbb{Q}[n]$-span of $\{E_1, E_2, E_3, E_4, E_5\}$: no counterexample was found. This confirms the conjecture within the bounds $a_{\max} \leq 5$, $d \leq 6$.
 
+**Open question: scope of the conjecture.** Three natural extensions remain unresolved:
+
+1. **Does the conjecture hold for $d \geq 7$?** At $d=7$ the prime evaluation matrix grows from $300 \times 35$ to $300 \times 40$, increasing runtime but not intractability. Computational verification at $d=7$ and $d=8$ is within reach and would substantially strengthen the evidence.
+
+2. **Can the conjecture extend to $a_{\max} \geq 6$?** Theorem 2.1 shows $M_6$ cannot appear in prime-vanishing expressions, so any extension to higher weight would require new generating expressions built entirely from $M_1,\ldots,M_5$ at still higher polynomial degrees. At weight 14 the cusp form space is 2-dimensional; at weight 16 it is 3-dimensional. Whether the cusp form exclusion mechanism propagates to prevent all higher-weight contributions, or whether new $M_1$–$M_5$ expressions emerge at large $d$, is an open structural question.
+
+3. **Is $a_{\max} = 5$ the true frontier?** It is conceivable that the weight-12 barrier forces the generating set to be exactly $\{E_1, E_2, E_3, E_4, E_5\}$ for all degrees $d$—that is, that no further linearly independent prime-vanishing expression exists at any degree. Proving or disproving this would fully resolve the conjecture of [1].
+
 **Note on non-negativity and the conjecture.** Since the canonical $E_5$ is not non-negative, it strictly speaking lives outside the cone of non-negative prime-vanishing expressions. However, the combination $E_5 + 856\,E_4$ is non-negative and spans the same new dimension as $E_5$ alone, since $E_4$ is already in the span of $\{E_1,\ldots,E_4\}$. The conjecture as stated in [1] pertains to non-negative expressions; our result shows that the span of $\{E_1, E_2, E_3, E_4, E_5 + 856\,E_4\}$ equals the span of $\{E_1, E_2, E_3, E_4, E_5\}$, which equals the full prime-vanishing subspace within our computational bounds.
 
 ---
