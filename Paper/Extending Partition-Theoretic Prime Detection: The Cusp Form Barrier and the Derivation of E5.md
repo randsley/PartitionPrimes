@@ -332,6 +332,21 @@ These 21 rational coefficients (plus $c_\tau = -17/150\,450\,048\,000$) were ext
 
 ---
 
+### Computational Scaling
+
+The prime evaluation matrix has size $N \times (d+1)a_{\max}$. Rational RREF is the dominant cost; its complexity is $O(N \cdot (d+1)^2 a_{\max}^2)$ in the number of arithmetic operations over $\mathbb{Q}$. For $N = 300$ primes and $a_{\max} = 5$, we measured the following on a single core (Julia 1.x, `Rational{BigInt}` arithmetic):
+
+| Degree $d$ | Matrix size | Nullity | RREF time |
+|:---:|:---:|:---:|:---:|
+| 6 | $300 \times 35$ | 20 | 0.16 s |
+| 10 | $300 \times 55$ | 36 | 0.24 s |
+| 20 | $300 \times 105$ | 76 | 0.62 s |
+| 30 | $300 \times 155$ | 116 | 1.13 s |
+
+The scaling is sub-quadratic in $d$ in practice. Extensions to $d \leq 50$ (matrix size $300 \times 255$) are straightforwardly feasible; the current bound of $d \leq 6$ in §4.3 is conservative and chosen to keep verification fast, not because higher degrees are intractable. The primary open cost in extending the conjecture verification is not RREF time but rather the evaluation of $M_1,\ldots,M_5$ at 300 primes for large $d$, which requires computing high powers of primes exactly — still polynomial time, but with growing integer sizes.
+
+---
+
 ### Reproducibility
 
 All computations in this paper were performed using the `QuasiShuffleAlgebra` Julia package, available at `https://github.com/randsley/PartitionPrimes`. The package uses `Rational{BigInt}` arithmetic throughout; all results are exact. The data extraction script `Paper/extract_paper_data.jl` reproduces every numerical claim in this paper.
