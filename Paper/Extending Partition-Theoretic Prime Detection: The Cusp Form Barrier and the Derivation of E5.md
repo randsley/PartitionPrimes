@@ -67,8 +67,8 @@ The presence of $\tau(n)$ in $M_6(n)$ fundamentally breaks the algebraic structu
 We demonstrate this via the **prime evaluation matrix** $\mathbf{M}(d, a_{\max}, N)$: the $N \times (d+1) a_{\max}$ matrix whose rows are evaluations of $\{n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq a_{\max}\}$ at the first $N$ primes. All arithmetic is exact over $\mathbb{Q}$.
 
 **Theorem 2.1 (Exclusion of $M_6$, computational).** For $d \in \{2, 3\}$ and $N = 95$ primes in $[2,500]$:
-$$\mathrm{rank}\bigl(\mathbf{M}(d, 6, N)\bigr) = \mathrm{rank}\bigl(\mathbf{M}(d, 5, N)\bigr) + (d+1)$$
-$$\dim\ker\bigl(\mathbf{M}(d, 6, N)\bigr) = \dim\ker\bigl(\mathbf{M}(d, 5, N)\bigr)$$
+$$\mathrm{rank}(\mathbf{M}(d, 6, N)) = \mathrm{rank}(\mathbf{M}(d, 5, N)) + (d+1)$$
+$$\dim\ker(\mathbf{M}(d, 6, N)) = \dim\ker(\mathbf{M}(d, 5, N))$$
 
 *Proof.* Evaluated at all 95 primes in $[2, 500]$ with $d=2$:
 
@@ -89,7 +89,7 @@ Adding the 3 columns $\{M_6, n M_6, n^2 M_6\}$ increases the rank by exactly 3 a
 
 Having established that $M_6(n)$ cannot appear in any prime-vanishing expression, we search for $E_5$ within the basis:
 
-$$\mathcal{B}_d = \bigl\{ n^k M_a(n) \mid 0 \leq k \leq d,\; 1 \leq a \leq 5 \bigr\}$$
+$$\mathcal{B}_d = \{ n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq 5 \}$$
 
 at increasing polynomial degree $d$. The prime evaluation matrix $\mathbf{M}(d, 5, N)$ (with $N = 95$ primes from $[2,500]$) is constructed using the exact closed-form formulas for $M_1,\ldots,M_5$ (which involve only divisor sums and polynomial prefactors, all computed exactly). Its null space is computed by rational RREF over $\mathbb{Q}$ using `Rational{BigInt}` arithmetic throughout.
 
