@@ -29,16 +29,19 @@ function E4(n::Int)
 end
 
 function E5(n::Int)
+    # Minimal-degree (d=2) canonical form extracted from the null space of the
+    # prime evaluation matrix at (a_max=5, N=95 primes in [2,500]).
+    # Vanishes iff n is prime; first appears at polynomial degree d=2 (not d=3).
     m3 = M3(n)
     m4 = M4(n)
     m5 = M5(n)
     bn = big(n)
     return (
-        (-270270 + 663549*bn - 522351*bn^2 + 129072*bn^3) * M1(n)
-        + (-315272*bn^2 + 30400*bn^3) * M2(n)
-        + (-340864*bn^2 + 15872*bn^3) * m3
-        + (-193536*bn^2) * m4
-        + 154828800 * m5
+        (-450450 + 675675*bn - 225225*bn^2) * M1(n)
+        + (960960*bn - 120120*bn^2) * M2(n)
+        + (2534912*bn - 166016*bn^2) * m3
+        + (7999488*bn - 322560*bn^2) * m4
+        + 258048000 * m5
     )
 end
 

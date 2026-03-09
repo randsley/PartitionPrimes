@@ -110,7 +110,9 @@ E4 = (126n⁵-1303n⁴+5073n³-9323n²+8097n-2670)·M₁
      + (60480n³-1510080n²+10644480n-23496480)·M₃
      + (725760n²-36288000n+218453760)·M₄
      - 580608000·M₅
-E5 is currently unimplemented (placeholder zero vector).
+E5 = (-450450 + 675675n - 225225n²)·M₁ + (960960n - 120120n²)·M₂
+     + (2534912n - 166016n²)·M₃ + (7999488n - 322560n²)·M₄ + 258048000·M₅
+(Minimal polynomial degree d=2; vanishes iff prime; may be negative at composites.)
 """
 function table1_coeffs(d::Int, a_max::Int)::Matrix{Rational{BigInt}}
     dim = (d + 1) * a_max
@@ -177,17 +179,17 @@ function table1_coeffs(d::Int, a_max::Int)::Matrix{Rational{BigInt}}
     set!(4, 0, 4,  218453760)
     set!(4, 0, 5, -580608000)
 
-    # E5: (d=3, a_max=5 counterexample, verified prime-vanishing)
-    set!(5, 0, 1, -270270)
-    set!(5, 1, 1,  663549)
-    set!(5, 2, 1, -522351)
-    set!(5, 3, 1,  129072)
-    set!(5, 2, 2, -315272)
-    set!(5, 3, 2,   30400)
-    set!(5, 2, 3, -340864)
-    set!(5, 3, 3,   15872)
-    set!(5, 2, 4, -193536)
-    set!(5, 0, 5, 154828800)
+    # E5: minimal-degree (d=2) canonical form
+    set!(5, 0, 1,  -450450)
+    set!(5, 1, 1,   675675)
+    set!(5, 2, 1,  -225225)
+    set!(5, 1, 2,   960960)
+    set!(5, 2, 2,  -120120)
+    set!(5, 1, 3,  2534912)
+    set!(5, 2, 3,  -166016)
+    set!(5, 1, 4,  7999488)
+    set!(5, 2, 4,  -322560)
+    set!(5, 0, 5, 258048000)
 
     return T
 end
