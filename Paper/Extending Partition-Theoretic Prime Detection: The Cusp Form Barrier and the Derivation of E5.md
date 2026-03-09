@@ -200,6 +200,32 @@ The smallest composite at which $E_5$ is positive is $n = 25$. The 55 positive c
 
 This behavior is qualitatively different from $E_1$–$E_4$, which are non-negative at all composites. The reason is structural: $E_5$ lives in a dimension of the prime-vanishing null space that is orthogonal to the non-negativity cone spanned by $E_1$–$E_4$.
 
+**Concrete evaluations.** To illustrate the scale and structure of $E_5$, we give two explicit evaluations. At the smallest positive composite $n = 25 = 5^2$:
+
+| Term | Value |
+|---|---|
+| $(-450450 + 675675 \cdot 25 - 225225 \cdot 625) \cdot M_1(25)$ | $-3\,854\,050\,200$ |
+| $(960960 \cdot 25 - 120120 \cdot 625) \cdot M_2(25)$ | $-90\,819\,729\,000$ |
+| $(2534912 \cdot 25 - 166016 \cdot 625) \cdot M_3(25)$ | $-399\,227\,472\,000$ |
+| $(7999488 \cdot 25 - 322560 \cdot 625) \cdot M_4(25)$ | $-15\,895\,756\,800$ |
+| $258048000 \cdot M_5(25)$ | $+510\,160\,896\,000$ |
+| **$E_5(25)$** | **$+363\,888\,000$** |
+
+The positive value arises because the $M_5$ term ($\approx +5.1\times10^{11}$) slightly dominates the combined negative contributions of the lower-weight terms.
+
+At the even composite $n = 100 = 2^2 \cdot 5^2$, the same competition plays out at a far larger scale:
+
+| Term | Value |
+|---|---|
+| $c_1(100) \cdot M_1(100)$ | $\approx -4.7\times10^{11}$ |
+| $c_2(100) \cdot M_2(100)$ | $\approx -1.5\times10^{14}$ |
+| $c_3(100) \cdot M_3(100)$ | $\approx -2.0\times10^{16}$ |
+| $c_4(100) \cdot M_4(100)$ | $\approx -9.69\times10^{17}$ |
+| $c_5(100) \cdot M_5(100)$ | $\approx +9.86\times10^{17}$ |
+| **$E_5(100)$** | **$-2\,935\,909\,013\,178\,150$** |
+
+Here the $M_4$ and $M_5$ terms are both of order $10^{17}$ and nearly cancel, but the net result is negative ($\approx -2.9\times10^{15}$). This near-cancellation between large opposing terms is characteristic of the expression throughout, and explains why the symlog scale in Figure 1 is essential: the raw values span 18 orders of magnitude across $n \in [4, 200]$.
+
 **Factorization structure.** We investigated whether the positive and negative composites share common arithmetic properties. A striking pattern emerges:
 
 - All 55 composites where $E_5(n) > 0$ are **odd**.
