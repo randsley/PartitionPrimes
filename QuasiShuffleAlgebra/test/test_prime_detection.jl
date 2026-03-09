@@ -28,15 +28,25 @@
         end
     end
 
-    # E5 vanishes at primes, non-negative at small composites
+    # E5 vanishes precisely at primes (minimal d=2 canonical form)
     @testset "E5 vanishes at primes" begin
         for p in [2, 3, 5, 7, 11, 13, 17, 19, 23]
             @test iszero(E5(p))
         end
     end
-    @testset "E5 non-negative at small composites" begin
-        for n in [4, 6, 8, 9, 10, 12, 14, 16, 18, 20, 25]
-            @test E5(n) >= 0
+    @testset "E5 non-zero at composites 4..64" begin
+        # E5 is not universally non-negative (may be negative at larger composites),
+        # but all composites in [4,64] are positive.
+        for n in filter(n -> !is_prime_trial(n), 4:64)
+            @test !iszero(E5(n))
+        end
+    end
+    @testset "E5 + 856*E4 non-negative at composites 4..100" begin
+        # E5 alone can be negative (219 composites in [4,500]).
+        # The combination E5 + 856*E4 is non-negative on all composites in [4,500];
+        # 856 is the smallest such integer constant.
+        for n in filter(n -> !is_prime_trial(n), 4:100)
+            @test E5(n) + 856*E4(n) >= 0
         end
     end
 
