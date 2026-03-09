@@ -34,7 +34,7 @@ Let $U_a(q) = \sum_{n=1}^{\infty} M_a(n) q^n$ be the generating function of $M_a
 
 $$M_a(n) = \sum_j P_j(n)\,\sigma_{2j+1}(n)$$
 
-where $P_j(n)$ are polynomials in $n$ with rational coefficients. The explicit closed-form formulas for $M_1$ through $M_5$ are given in [1, eqs.\ (1.4)–(1.8)].
+where $P_j(n)$ are polynomials in $n$ with rational coefficients. The explicit closed-form formulas for $M_1$ through $M_5$ are given in [1, eqs. (1.4)–(1.8)].
 
 Because at any prime $p$ we have $\sigma_k(p) = p^k + 1$, evaluating $M_a(p)$ collapses to a polynomial in $p$. This algebraic collapse creates the linear dependencies in the prime evaluation matrix that give rise to the null space containing $E_1,\ldots,E_4$.
 
@@ -52,7 +52,7 @@ Because $U_6(q)$ has a non-zero projection onto the cusp-form space, the closed-
 
 $$M_6(n) = \sum_{j=0}^{5} P_j(n)\,\sigma_{2j+1}(n) + c_\tau \cdot \tau(n)$$
 
-exactly over $\mathbb{Q}$ using rational row reduction (RREF with exact pivoting on a $55 \times 22$ matrix: 21 divisor-sum columns and 1 tau column). The unique solution is:
+exactly over $\mathbb{Q}$ using rational row reduction (RREF with exact pivoting on a $55 \times 22$ matrix: 21 polynomial-weighted divisor-sum columns of the form $n^k \sigma_{2j+1}(n)$, and 1 tau column). The unique solution is:
 
 $$M_6(n) = \sum_{j=0}^{5} P_j(n)\,\sigma_{2j+1}(n) - \frac{17}{150\,450\,048\,000}\,\tau(n)$$
 
@@ -66,11 +66,11 @@ The presence of $\tau(n)$ in $M_6(n)$ fundamentally breaks the algebraic structu
 
 We demonstrate this via the **prime evaluation matrix** $\mathbf{M}(d, a_{\max}, N)$: the $N \times (d+1) a_{\max}$ matrix whose rows are evaluations of $\{n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq a_{\max}\}$ at the first $N$ primes. All arithmetic is exact over $\mathbb{Q}$.
 
-**Theorem 2.1 (Exclusion of $M_6$).** For any degree $d \geq 0$ and $N$ sufficiently large:
+**Theorem 2.1 (Exclusion of $M_6$, computational).** For $d \in \{2, 3\}$ and $N = 95$ primes in $[2,500]$:
 $$\mathrm{rank}\bigl(\mathbf{M}(d, 6, N)\bigr) = \mathrm{rank}\bigl(\mathbf{M}(d, 5, N)\bigr) + (d+1)$$
 $$\dim\ker\bigl(\mathbf{M}(d, 6, N)\bigr) = \dim\ker\bigl(\mathbf{M}(d, 5, N)\bigr)$$
 
-*Computational proof.* Evaluated at all 95 primes in $[2, 500]$ with $d=2$:
+*Proof.* Evaluated at all 95 primes in $[2, 500]$ with $d=2$:
 
 | Matrix | Rows | Cols | Rank | Nullity |
 |--------|------|------|------|---------|
@@ -144,8 +144,10 @@ The algorithm terminates at $d=2$: one unique direction outside the $E_1$–$E_4
 
 After normalization (clearing all $\mathbb{Q}$-denominators and dividing by the integer GCD of numerators) and orientation (positive $M_5$ constant coefficient), the unique minimal-degree $E_5$ extracted at $d=2$ is:
 
-$$\boxed{E_5(n) = (-450450 + 675675n - 225225n^2)\,M_1(n) + (960960n - 120120n^2)\,M_2(n)}$$
-$$+ \,(2534912n - 166016n^2)\,M_3(n) + (7999488n - 322560n^2)\,M_4(n) + 258048000\,M_5(n)$$
+$$\boxed{\begin{aligned}
+E_5(n) &= (-450450 + 675675n - 225225n^2)\,M_1(n) + (960960n - 120120n^2)\,M_2(n) \\
+       &\quad + (2534912n - 166016n^2)\,M_3(n) + (7999488n - 322560n^2)\,M_4(n) + 258048000\,M_5(n)
+\end{aligned}}$$
 
 By construction, $E_5(n) = 0$ if and only if $n$ is prime. The formula uses only $M_1$ through $M_5$ and polynomial coefficients up to degree 2 in $n$.
 
@@ -195,7 +197,7 @@ The central conjecture of [1] posits that any non-negative prime-vanishing expre
 
 By appending $E_5(n)$, this gap is resolved. We verified the conjecture computationally for $a_{\max} = 5$ and polynomial degrees $d = 2$ through $d = 6$ using $N = 300$ primes:
 
-| Degree $d$ | Basis dim | Prime-van.\ dim | $E_1$–$E_5$ span dim | Conjecture holds? |
+| Degree $d$ | Basis dim | Prime-van. dim | $E_1$–$E_5$ span dim | Conjecture holds? |
 |:---:|:---:|:---:|:---:|:---:|
 | 2 | 15 | 4 | 15 | ✓ |
 | 3 | 20 | 8 | 19 | ✓ |
@@ -205,7 +207,7 @@ By appending $E_5(n)$, this gap is resolved. We verified the conjecture computat
 
 In every case, the prime-vanishing subspace is entirely contained in the $\mathbb{Q}[n]$-span of $\{E_1, E_2, E_3, E_4, E_5\}$: no counterexample was found. This confirms the conjecture within the bounds $a_{\max} \leq 5$, $d \leq 6$.
 
-**Note on non-negativity and the conjecture.** Since the canonical $E_5$ is not non-negative, it strictly speaking lives outside the cone of non-negative prime-vanishing expressions. However, the combination $E_5 + 856\,E_4$ is non-negative and spans the same new dimension. The conjecture as stated in [1] pertains to non-negative expressions; our result shows that the generating set $\{E_1, E_2, E_3, E_4, E_5 + 856\,E_4\} = \{E_1, E_2, E_3, 857\,E_4, E_5\}$ closes the conjecture within our computational bounds.
+**Note on non-negativity and the conjecture.** Since the canonical $E_5$ is not non-negative, it strictly speaking lives outside the cone of non-negative prime-vanishing expressions. However, the combination $E_5 + 856\,E_4$ is non-negative and spans the same new dimension as $E_5$ alone, since $E_4$ is already in the span of $\{E_1,\ldots,E_4\}$. The conjecture as stated in [1] pertains to non-negative expressions; our result shows that the span of $\{E_1, E_2, E_3, E_4, E_5 + 856\,E_4\}$ equals the span of $\{E_1, E_2, E_3, E_4, E_5\}$, which equals the full prime-vanishing subspace within our computational bounds.
 
 ---
 
@@ -237,7 +239,7 @@ This work opens several directions:
 
 1. **Higher weights.** At weight 14 and 16, the cusp form space grows. Do prime-vanishing expressions exist at $a_{\max} = 7$ or beyond, or does the cusp form exclusion propagate?
 
-2. **Sign structure of $E_5$.** The 55 composites where $E_5 > 0$ and the 349 where $E_5 < 0$ have no obvious factorization pattern (unlike the $d=3$ formulation where violations were confined to a sparse $5p$ family). What arithmetic property separates them?
+2. **Sign structure of $E_5$.** The 55 composites where $E_5 > 0$ and the 349 where $E_5 < 0$ have no obvious factorization pattern. What arithmetic property of $n$ determines the sign of $E_5(n)$?
 
 3. **Closed-form generating series.** Is there an analogue of the MacMahon generating functions $U_a(q)$ that organizes the expressions $E_k$ into a coherent modular-form framework?
 
