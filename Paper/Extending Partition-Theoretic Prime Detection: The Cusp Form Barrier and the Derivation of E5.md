@@ -306,6 +306,32 @@ By connecting partition arithmetic to the spectral geometry of modular forms, th
 
 ---
 
+---
+
+### Appendix A: Closed-Form Formula for $M_6(n)$
+
+The complete closed-form expression for $M_6(n)$, obtained by rational coefficient fitting as described in §2.1, is:
+
+$$M_6(n) = \sum_{j=0}^{5} P_j(n)\,\sigma_{2j+1}(n) - \frac{17}{150\,450\,048\,000}\,\tau(n)$$
+
+where the polynomials $P_j(n) \in \mathbb{Q}[n]$ are:
+
+$$P_0(n) = \frac{550499}{4541644800} - \frac{153617}{371589120}\,n + \frac{2159}{6635520}\,n^2 - \frac{67}{737280}\,n^3 + \frac{11}{1105920}\,n^4 - \frac{1}{2764800}\,n^5$$
+
+$$P_1(n) = \frac{153617}{743178240} - \frac{2159}{8847360}\,n + \frac{67}{819200}\,n^2 - \frac{11}{1105920}\,n^3 + \frac{1}{2580480}\,n^4$$
+
+$$P_2(n) = \frac{2159}{88473600} - \frac{67}{4915200}\,n + \frac{11}{5160960}\,n^2 - \frac{1}{10321920}\,n^3$$
+
+$$P_3(n) = \frac{67}{123863040} - \frac{11}{74317824}\,n + \frac{1}{111476736}\,n^2$$
+
+$$P_4(n) = \frac{11}{3715891200} - \frac{1}{3096576000}\,n$$
+
+$$P_5(n) = \frac{1}{268995133440}$$
+
+These 21 rational coefficients (plus $c_\tau = -17/150\,450\,048\,000$) were extracted by solving a $55 \times 22$ linear system over $\mathbb{Q}$ using rational RREF. The solution is unique (rank 22) and verified to reproduce $M_6(n)$ for $n = 1, \ldots, 30$ via direct partition enumeration. The script `Paper/compute_m6_coefficients.jl` in the accompanying repository reproduces this computation exactly.
+
+---
+
 ### Reproducibility
 
 All computations in this paper were performed using the `QuasiShuffleAlgebra` Julia package, available at `https://github.com/randsley/PartitionPrimes`. The package uses `Rational{BigInt}` arithmetic throughout; all results are exact. The data extraction script `Paper/extract_paper_data.jl` reproduces every numerical claim in this paper.
