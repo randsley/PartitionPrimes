@@ -196,6 +196,16 @@ The smallest composite at which $E_5$ is positive is $n = 25$. The 55 positive c
 
 This behavior is qualitatively different from $E_1$–$E_4$, which are non-negative at all composites. The reason is structural: $E_5$ lives in a dimension of the prime-vanishing null space that is orthogonal to the non-negativity cone spanned by $E_1$–$E_4$.
 
+**Factorization structure.** We investigated whether the positive and negative composites share common arithmetic properties. A striking pattern emerges:
+
+- All 55 composites where $E_5(n) > 0$ are **odd**.
+- No even composite in $[4, 500]$ satisfies $E_5(n) > 0$; all 249 even composites give $E_5(n) < 0$.
+- Among the 155 odd composites in $[4, 500]$, exactly 55 (35%) are positive and 100 (65%) are negative.
+
+Thus parity is a necessary but not sufficient condition for positivity: $E_5(n) > 0 \Rightarrow n$ is odd, but not all odd composites are positive. The even composites are uniformly negative, while the sign at odd composites depends on finer arithmetic structure that we do not currently characterize.
+
+This contrasts sharply with an intermediate non-canonical degree-$d=3$ formulation of $E_5$ encountered during the derivation, whose 12 negative composites were confined to multiples of 5. The canonical $d=2$ formula distributes negativity far more broadly, with parity emerging as the principal organizing feature.
+
 **Remediation.** Since $E_4(n) \geq 0$ at all composites (strictly positive) and $E_4(p) = 0$ at all primes, any expression $E_5 + k\,E_4$ for $k > 0$ preserves the prime-vanishing property while potentially restoring non-negativity. We searched for the smallest positive integer $k$ such that $E_5(n) + k\,E_4(n) \geq 0$ for all composites in $[4, 500]$:
 
 $$k_{\min} = 856$$
@@ -250,7 +260,7 @@ This work opens several directions:
 
 1. **Higher weights.** At weight 14 and 16, the cusp form space grows. Do prime-vanishing expressions exist at $a_{\max} = 7$ or beyond, or does the cusp form exclusion propagate?
 
-2. **Sign structure of $E_5$.** The 55 composites where $E_5 > 0$ and the 349 where $E_5 < 0$ have no obvious factorization pattern. (An earlier, non-minimal $d=3$ formulation of $E_5$—an intermediate result not recorded here—had its negative values confined to a sparse family of composites divisible by 5; the canonical $d=2$ form distributes the sign change far more broadly.) What arithmetic property of $n$ determines the sign of $E_5(n)$ for the canonical formula?
+2. **Sign structure of $E_5$.** Parity is a necessary condition for positivity: all 55 positive-$E_5$ composites in $[4,500]$ are odd, and no even composite is positive (§4.2). But parity is not sufficient — 100 odd composites are also negative. What finer arithmetic property of an odd composite $n$ determines whether $E_5(n) > 0$?
 
 3. **Closed-form generating series.** Is there an analogue of the MacMahon generating functions $U_a(q)$ that organizes the expressions $E_k$ into a coherent modular-form framework?
 
