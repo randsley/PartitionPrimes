@@ -60,6 +60,10 @@ The **non-zero coefficient** $c_\tau = -17/150\,450\,048\,000$ is the key obstru
 $$150\,450\,048\,000 = 2^{10} \times 3^5 \times 5^3 \times 7 \times 691$$
 where 691 is the numerator of the Bernoulli number $B_{12}$—an expected fingerprint of modular forms at weight 12.
 
+The appearance of 691 is not accidental. The normalized Eisenstein series of weight 12 has the $q$-expansion
+$$E_{12}(q) = 1 + \frac{65520}{691}\sum_{n=1}^{\infty}\sigma_{11}(n)\,q^n,$$
+so 691 enters the denominator of any rational linear combination involving $E_{12}$, and hence of $M_6$. More strikingly, Ramanujan observed that $\tau(n) \equiv \sigma_{11}(n) \pmod{691}$ for all $n \geq 1$—a congruence that reflects the fact that $\Delta(q)$ and $E_{12}(q)$ are congruent modulo 691 as $q$-series. The prime 691 is therefore the precise arithmetic witness to the non-trivial cusp form component of $U_6(q)$: it is the smallest prime at which $\Delta$ and the Eisenstein series become distinguishable modulo a prime, and its appearance in the denominator of $c_\tau$ encodes this distinction directly.
+
 #### 2.2. The Exclusion of $M_6$: The Pivot Discovery
 
 The presence of $\tau(n)$ in $M_6(n)$ fundamentally breaks the algebraic structure required for prime-vanishing expressions. Unlike the divisor sums $\sigma_k(p) = p^k + 1$ at primes, the Ramanujan tau function satisfies the Hasse–Weil bound $|\tau(p)| \leq 2p^{11/2}$ and does not reduce to a polynomial in $p$. Consequently, evaluating $n^k M_6(n)$ at primes yields linearly independent data that cannot be cancelled by divisor-sum combinations.
