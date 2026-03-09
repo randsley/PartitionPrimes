@@ -140,7 +140,14 @@ We applied this algorithm with $N = 95$ primes in $[2,500]$ and composites in $[
 
 The algorithm terminates at $d=2$: one unique direction outside the $E_1$–$E_4$ span is found at degree $d=2$, and this is the canonical minimal-degree $E_5$.
 
-**Remark.** The pattern of $E_1,\ldots,E_4$ is that $E_k$ introduces $M_{k+1}$ as its highest-weight term and has polynomial degree $d=k$. By this pattern, $E_5$ would be expected at $d=5$ with $M_6$ as its leading term. The actual $E_5$ breaks the pattern in two ways: it excludes $M_6$ entirely (by Theorem 2.1) and it first appears at $d=2$ (degree resets relative to the pattern).
+**Remark.** The sequence $E_1,\ldots,E_4$ exhibits a transparent pattern:
+
+- $E_1$: degree 2, introduces $M_2$
+- $E_2$: degree 3, introduces $M_3$
+- $E_3$: degree 4, introduces $M_4$
+- $E_4$: degree 5, introduces $M_5$
+
+Extrapolation would predict $E_5$ at degree 6 with $M_6$ as its maximal MacMahon function. This extrapolation fails on two independent fronts simultaneously. First, the weight-12 cusp form barrier (Theorem 2.1) eliminates $M_6$ from the candidate space entirely. Second, the $E_1$–$E_4$ expressions do not occupy all dimensions of the degree-0–5 polynomial subspace; their $\mathbb{Q}[n]$-span leaves a gap at lower degrees. The canonical $E_5$ exploits this gap, residing at degree 2 within the $M_1$–$M_5$ basis. This doubling-back to lower degree is a geometric consequence of the weight-12 obstruction: when the naive upward extension fails, the null space folds back to find the new direction at a degree already partially explored.
 
 #### 3.4. The Exact Formula for $E_5(n)$
 
