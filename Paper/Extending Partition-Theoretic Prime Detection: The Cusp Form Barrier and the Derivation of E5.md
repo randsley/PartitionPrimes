@@ -14,7 +14,7 @@ The MacMahon functions, $M_a(n)$, represent weighted sums over strict $a$-part p
 
 $$M_a(n) = \sum_{\substack{0 < s_1 < \cdots < s_a \\ m_i \geq 1,\; \sum m_i s_i = n}} m_1 m_2 \cdots m_a$$
 
-By leveraging the quasi-shuffle algebra of these functions and their connection to quasimodular forms, Craig–van Ittersum–Ono constructed a sequence of prime-detecting expressions $E_1(n)$ through $E_4(n)$, where each $E_k$ introduces $M_{k+1}$ as its highest-weight component. They conjectured that any non-negative prime-vanishing expression in $\mathbb{Q}[n] \otimes \{M_a\}$ is a $\mathbb{Q}[n]$-linear combination of these foundational entries.
+By leveraging the **quasi-shuffle algebra** of these functions—an algebra structure on formal power series of MacMahon partition functions, governed by the quasi-shuffle product and Ramanujan's differential equations (see [1, Section 3])—and their connection to quasimodular forms, Craig–van Ittersum–Ono constructed a sequence of prime-detecting expressions $E_1(n)$ through $E_4(n)$, where each $E_k$ introduces $M_{k+1}$ as its highest-weight component. They conjectured that any non-negative prime-vanishing expression in $\mathbb{Q}[n] \otimes \{M_a\}$ is a $\mathbb{Q}[n]$-linear combination of these foundational entries.
 
 In this paper we develop an exact computational framework in Julia to test and extend this conjecture. A computational sweep reveals that the conjecture fails for $a_{\max} \geq 5$ unless a fifth expression $E_5(n)$ is added. We derive $E_5$ explicitly.
 
@@ -80,6 +80,8 @@ $$\dim\ker(\mathbf{M}(d, 6, N)) = \dim\ker(\mathbf{M}(d, 5, N))$$
 Adding the 3 columns $\{M_6, n M_6, n^2 M_6\}$ increases the rank by exactly 3 and leaves the nullity unchanged. In the RREF of $\mathbf{M}(2, 6, 95)$, all three $M_6$-associated columns are pivot columns. This was verified independently for $d=3$ (nullity 8 for both $a_{\max}=5$ and $a_{\max}=6$).
 
 **Corollary.** No prime-vanishing expression can involve $M_6(n)$. The basis for the prime-vanishing null space is confined to $M_1, \ldots, M_5$. $\square$
+
+*Terminology note.* In row-reduced echelon form (RREF), a **pivot column** is one that contains a leading 1 in some row; it represents a direction that is linearly independent of all preceding columns. A column is a pivot column if and only if it contributes a new dimension to the column space—equivalently, it has no free variable in the null space. The above result says that in the RREF of $\mathbf{M}(d,6,N)$, every column corresponding to $n^k M_6(n)$ is a pivot, so no null vector can have a non-zero entry in those positions.
 
 ---
 
@@ -181,7 +183,9 @@ Theorem 1.1 of [1] constructs expressions $E_k(n) \geq 0$ for all $n \geq 2$, wi
 | Composites with $E_5(n) < 0$ | 349 |
 | Composites with $E_5(n) = 0$ | 0 (none; would imply prime) |
 
-The smallest composite at which $E_5$ is positive is $n = 25$. The 55 positive cases are a minority; $E_5$ is negative at 86% of composites in $[4,500]$.
+The smallest composite at which $E_5$ is positive is $n = 25$. The 55 positive cases are a minority; $E_5$ is negative at 86% of composites in $[4,500]$. Figure 1 illustrates this for $n \in [4,200]$ on a symmetric-logarithmic scale (symlog: $\operatorname{sign}(E_5)\cdot\log_{10}(1+|E_5|)$), which preserves sign information while compressing the enormous dynamic range of values.
+
+![Figure 1: E₅(n) at composite integers in [4,200]. Teal stems point upward where E₅ > 0; crimson stems point downward where E₅ < 0. The symlog y-axis compresses the dynamic range across 18 orders of magnitude.](e5_scatter.png)
 
 This behavior is qualitatively different from $E_1$–$E_4$, which are non-negative at all composites. The reason is structural: $E_5$ lives in a dimension of the prime-vanishing null space that is orthogonal to the non-negativity cone spanned by $E_1$–$E_4$.
 
@@ -197,13 +201,13 @@ The central conjecture of [1] posits that any non-negative prime-vanishing expre
 
 By appending $E_5(n)$, this gap is resolved. We verified the conjecture computationally for $a_{\max} = 5$ and polynomial degrees $d = 2$ through $d = 6$ using $N = 300$ primes:
 
-| Degree $d$ | Basis dim | Prime-van. dim | $E_1$–$E_5$ span dim | Conjecture holds? |
-|:---:|:---:|:---:|:---:|:---:|
-| 2 | 15 | 4 | 15 | ✓ |
-| 3 | 20 | 8 | 19 | ✓ |
-| 4 | 25 | 12 | 23 | ✓ |
-| 5 | 30 | 16 | 27 | ✓ |
-| 6 | 35 | 20 | 31 | ✓ |
+| Degree $d$ | Basis dim | Prime-van. dim | $E_1$–$E_5$ span dim | Conjecture holds? | Time (s) |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 2 | 15 | 4 | 15 | ✓ | < 1 |
+| 3 | 20 | 8 | 19 | ✓ | < 1 |
+| 4 | 25 | 12 | 23 | ✓ | < 1 |
+| 5 | 30 | 16 | 27 | ✓ | 1 |
+| 6 | 35 | 20 | 31 | ✓ | 1 |
 
 In every case, the prime-vanishing subspace is entirely contained in the $\mathbb{Q}[n]$-span of $\{E_1, E_2, E_3, E_4, E_5\}$: no counterexample was found. This confirms the conjecture within the bounds $a_{\max} \leq 5$, $d \leq 6$.
 
@@ -239,7 +243,7 @@ This work opens several directions:
 
 1. **Higher weights.** At weight 14 and 16, the cusp form space grows. Do prime-vanishing expressions exist at $a_{\max} = 7$ or beyond, or does the cusp form exclusion propagate?
 
-2. **Sign structure of $E_5$.** The 55 composites where $E_5 > 0$ and the 349 where $E_5 < 0$ have no obvious factorization pattern. What arithmetic property of $n$ determines the sign of $E_5(n)$?
+2. **Sign structure of $E_5$.** The 55 composites where $E_5 > 0$ and the 349 where $E_5 < 0$ have no obvious factorization pattern. (An earlier, non-minimal $d=3$ formulation of $E_5$—an intermediate result not recorded here—had its negative values confined to a sparse family of composites divisible by 5; the canonical $d=2$ form distributes the sign change far more broadly.) What arithmetic property of $n$ determines the sign of $E_5(n)$ for the canonical formula?
 
 3. **Closed-form generating series.** Is there an analogue of the MacMahon generating functions $U_a(q)$ that organizes the expressions $E_k$ into a coherent modular-form framework?
 
@@ -247,12 +251,20 @@ By connecting partition arithmetic to the spectral geometry of modular forms, th
 
 ---
 
+### Reproducibility
+
+All computations in this paper were performed using the `QuasiShuffleAlgebra` Julia package, available at `https://github.com/randsley/PartitionPrimes`. The package uses `Rational{BigInt}` arithmetic throughout; all results are exact. The data extraction script `Paper/extract_paper_data.jl` reproduces every numerical claim in this paper.
+
+---
+
 ### References
 
 [1] Craig, W., van Ittersum, J.-W., & Ono, K. (2024). *Integer partitions detect the primes*. arXiv preprint arXiv:2405.06451.
 
-[2] Zagier, D. (2008). *Elliptic Modular Forms and Their Applications*. In: *The 1-2-3 of Modular Forms*, Universitext, Springer, 1–103.
+[2] Bachmann, H., & Kühn, U. (2017). *The algebra of bi-brackets and regularized multiple Eisenstein series*. Journal of Number Theory, 200, 260–294. (For background on quasi-shuffle algebras and their role in partition function identities.)
 
-[3] Serre, J.-P. (1973). *A Course in Arithmetic*. Graduate Texts in Mathematics 7, Springer.
+[3] Zagier, D. (2008). *Elliptic Modular Forms and Their Applications*. In: *The 1-2-3 of Modular Forms*, Universitext, Springer, 1–103.
 
-[4] Craig, W. (2021). *Compositions, Partitions, and Prime Detection*. PhD thesis, University of Virginia.
+[4] Serre, J.-P. (1973). *A Course in Arithmetic*. Graduate Texts in Mathematics 7, Springer.
+
+[5] Craig, W. (2021). *Compositions, Partitions, and Prime Detection*. PhD thesis, University of Virginia.
