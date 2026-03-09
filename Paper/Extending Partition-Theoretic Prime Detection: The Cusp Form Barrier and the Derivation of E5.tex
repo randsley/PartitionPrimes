@@ -341,7 +341,7 @@ independence from the corresponding evaluations of \(E_1,\ldots,E_4\).
 
 \textbf{Algorithm: Extract\_\(E_5\)}
 
-\begin{verbatim}
+{\small\begin{verbatim}
 Input:
   a_max = 5 (integer)
   N = 95 primes from [2,500] (list of primes)
@@ -370,7 +370,7 @@ for d = 0, 1, 2, ... do:
     else if |outside| > 1:
         report unexpected; investigate
 end for
-\end{verbatim}
+\end{verbatim}}
 
 \subsection{3.3. The Degree Sweep}\label{the-degree-sweep}
 
@@ -950,7 +950,7 @@ independently:
   Clone the repository:
   \texttt{git\ clone\ https://github.com/randsley/PartitionPrimes.git}
 \item
-  Run the data extraction script:
+  Run the data extraction script:\\
   \texttt{julia\ -\/-project=QuasiShuffleAlgebra\ Paper/extract\_paper\_data.jl}
 \item
   Compare the printed values against the tables in §2.1, §4.1, §4.2, and
@@ -985,11 +985,14 @@ Detection}. PhD thesis, University of Virginia.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-\textbf{Paper information} - \textbf{Version:} 2.1 (revised) -
-\textbf{Last updated:} 2026-03-09 - \textbf{Repository:}
-https://github.com/randsley/PartitionPrimes - \textbf{Data extraction
-script:} \texttt{Paper/extract\_paper\_data.jl} - \textbf{Author's
-note:} All computations performed with Julia 1.10.0 or later, using
-\texttt{Rational\{BigInt\}} for exact arithmetic throughout.
+\textbf{Paper information}
+\begin{itemize}
+\tightlist
+\item \textbf{Version:} 2.1 (revised)
+\item \textbf{Last updated:} 2026-03-09
+\item \textbf{Repository:} \url{https://github.com/randsley/PartitionPrimes}
+\item \textbf{Data extraction script:} \texttt{Paper/extract\_paper\_data.jl}
+\item \textbf{Author's note:} All computations performed with Julia~1.10.0 or later, using exact \texttt{Rational\{BigInt\}} arithmetic.
+\end{itemize}
 
 \end{document}
