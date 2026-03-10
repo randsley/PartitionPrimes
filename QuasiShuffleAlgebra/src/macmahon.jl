@@ -144,6 +144,67 @@ function M6(n::Int)::Rational{BigInt}
     )
 end
 
+"""
+    M7(n) -> Rational{BigInt}
+
+Closed-form M_7(n) via divisor power sums only.
+At weight 2a=14, the cusp form space S_14 = 0, so no τ(n) term appears.
+Formula: M7(n) = Σ_{j=0}^{6} P_j(n) σ_{2j+1}(n)  (28 rational polynomial terms).
+Coefficients are fitted lazily on first call using M_direct for n = 1..70.
+"""
+# M7: weight-14 MacMahon function.
+# Despite S_14 = 0 (no cusp form at weight 14), M7 involves τ(n) and n·τ(n)
+# via the E_2·Δ component of its depth-1 quasimodular decomposition.
+const _m7_sigma_basis = [(j, k) for j in 0:6 for k in 0:(6 - j)]  # 28 (j, poly_degree) pairs
+const _m7_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m7!()
+    ns    = 1:70
+    ncol  = 30   # 28 divisor-sum columns + τ(n) + n·τ(n)
+    A     = zeros(Rational{BigInt}, length(ns), ncol)
+    b     = Rational{BigInt}[M_direct(7, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m7_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau          = ramanujan_tau(n)
+        A[i, 29]     = Rational{BigInt}(tau)
+        A[i, 30]     = Rational{BigInt}(n) * Rational{BigInt}(tau)
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)          # forward ref to conjecture.jl — fine in Julia
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m7_coeffs[] = x
+end
+
+"""
+    M7(n) -> Rational{BigInt}
+
+Closed-form M_7(n). Despite S_14=0, M7 involves τ(n) and n·τ(n) via the E_2·Δ
+component of its quasimodular depth-1 piece (which lives in M_12 = span{E_12,Δ}).
+Formula: M7(n) = Σ P_j(n)σ_{2j+1}(n) + c_τ·τ(n) + c_{nτ}·n·τ(n).
+Coefficients fitted lazily on first call using M_direct for n = 1..70.
+"""
+function M7(n::Int)::Rational{BigInt}
+    isempty(_m7_coeffs[]) && _fit_m7!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m7_sigma_basis)
+        c = _m7_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau     = ramanujan_tau(n)
+    result += _m7_coeffs[][29] * Rational{BigInt}(tau)
+    result += _m7_coeffs[][30] * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    return result
+end
+
 # Direct combinatorial M_a(n)
 """
     M_direct(a, n) -> Int

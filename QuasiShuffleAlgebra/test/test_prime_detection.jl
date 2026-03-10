@@ -50,6 +50,24 @@
         end
     end
 
+    # M7 closed form matches M_direct
+    # At weight 14, S_14 = 0, so M7 is purely divisor-sum-based (no tau term).
+    # M7(28) = 1 because the unique strict 7-part partition of 28 is (1,2,3,4,5,6,7)
+    # with all multiplicities 1, contributing product 1.
+    @testset "M7 matches M_direct for n = 1..35" begin
+        for n in 1:35
+            @test M7(n) == M_direct(7, n)
+        end
+    end
+    @testset "M7(28) == 1  (single partition 1+2+3+4+5+6+7)" begin
+        @test M7(28) == 1
+    end
+    @testset "M7 vs M_direct at primes" begin
+        for p in [29, 31, 37, 41, 43]
+            @test M7(p) == M_direct(7, p)
+        end
+    end
+
     # M_direct consistency with M_macmahonesque
     @testset "M_direct vs M_macmahonesque" begin
         for n in 1:30

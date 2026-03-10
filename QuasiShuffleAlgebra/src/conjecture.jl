@@ -66,6 +66,8 @@ function eval_Ma(a::Int, n::Int)::Rational{BigInt}
         return M5(n)
     elseif a == 6
         return M6(n)
+    elseif a == 7
+        return M7(n)
     else
         return Rational{BigInt}(M_direct(a, n))
     end

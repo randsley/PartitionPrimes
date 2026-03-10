@@ -27,11 +27,11 @@ export zq_add, zq_scale, zq_multiply, cleanup!, evaluate_zq, all_words_up_to_wei
 export bernoulli
 export diamond_coeffs, diamond
 export quasishuffle, quasishuffle_words
-export σ, ramanujan_tau, M1, M2, M3, M4, M5, M6, M_direct, M_macmahonesque
+export σ, ramanujan_tau, M1, M2, M3, M4, M5, M6, M7, M_direct, M_macmahonesque
 export d_operator
 export symmetrise
 export E1, E2, E3, E4, E5, is_prime_partition, verify_range, is_prime_trial
-export build_basis, eval_matrix, table1_coeffs
+export build_basis, eval_matrix, eval_Ma, table1_coeffs
 export rational_rref!, rational_nullspace, rank_over_Q, is_in_colspan
 export test_conjecture, scan_conjecture
 
