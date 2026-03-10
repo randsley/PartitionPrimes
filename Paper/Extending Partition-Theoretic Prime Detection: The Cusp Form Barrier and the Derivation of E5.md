@@ -1,6 +1,12 @@
+<div align="center">
+
 # Extending Partition-Theoretic Prime Detection: The Cusp Form Barrier and the Derivation of E₅
 
+**Nigel Randsley**
+
 ### Abstract
+
+</div>
 
 Recent work by Craig, van Ittersum, and Ono [1] demonstrated a novel connection between additive and multiplicative number theory, using MacMahon partition functions $M_a(n)$ to detect primes via quasi-shuffle algebras. They constructed explicit prime-vanishing polynomial combinations $E_1(n)$ through $E_4(n)$ and conjectured that all such expressions form a finite generating set. This paper computationally derives the fifth and sixth fundamental expressions, $E_5(n)$ and $E_6(n)$, and illuminates why the naïve pattern—incrementally introducing $M_{k+1}$ to form $E_k$—breaks down. We show that at weight $2a=12$, the generating function $U_6(q)$ for $M_6(n)$ admits a component in the cusp form space spanned by the Ramanujan delta function $\Delta(q)$, making $M_6$ a pivot in the prime evaluation matrix and excluding it from all prime-vanishing expressions within the $\{M_1,\ldots,M_6\}$ basis. Restricting our search to $M_1,\ldots,M_5$, we derive $E_5$ at polynomial degree $d=2$. We then extend the framework to the $\{M_1,\ldots,M_7\}$ basis, where a $\tau$-cancellation mechanism between $M_6$ and $M_7$ admits one new null-space direction: the expression $E_6$ at degree $d=4$, involving both $M_6$ and $M_7$. We further establish that $\{E_1,\ldots,E_6\}$ is computationally complete: exhaustive search through $a_{\max} = 12$ (weights up to 24, including the first weight where $\dim S_{2a}=2$) and polynomial degree $d \leq 8$ finds no further independent prime-vanishing expressions.
 
