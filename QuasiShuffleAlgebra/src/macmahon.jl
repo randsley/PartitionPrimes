@@ -205,6 +205,189 @@ function M7(n::Int)::Rational{BigInt}
     return result
 end
 
+"""
+    cusp_form_16(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)·E₄(q)  (the unique cusp form of weight 16).
+  Δ·E₄ = Σ_{n≥1} [τ(n) + 240·Σ_{k=1}^{n-1} τ(k)·σ₃(n-k)] q^n.
+Results are cached.
+"""
+const _cf16_cache = BigInt[]
+
+function cusp_form_16(n::Int)::BigInt
+    n <= length(_cf16_cache) && return _cf16_cache[n]
+    N = max(n, length(_cf16_cache) + 64)
+    # ensure tau cache is warm
+    ramanujan_tau(N)
+    resize!(_cf16_cache, N)
+    for m in 1:N
+        val = _tau_cache[m]
+        for k in 1:m-1
+            val += big(240) * _tau_cache[k] * σ(3, m - k)
+        end
+        _cf16_cache[m] = val
+    end
+    return _cf16_cache[n]
+end
+
+"""
+    cusp_form_18(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)·E₆(q)  (the unique cusp form of weight 18).
+  Δ·E₆ = Σ_{n≥1} [τ(n) - 504·Σ_{k=1}^{n-1} τ(k)·σ₅(n-k)] q^n.
+Results are cached.
+"""
+const _cf18_cache = BigInt[]
+
+function cusp_form_18(n::Int)::BigInt
+    n <= length(_cf18_cache) && return _cf18_cache[n]
+    N = max(n, length(_cf18_cache) + 64)
+    ramanujan_tau(N)
+    resize!(_cf18_cache, N)
+    for m in 1:N
+        val = _tau_cache[m]
+        for k in 1:m-1
+            val -= big(504) * _tau_cache[k] * σ(5, m - k)
+        end
+        _cf18_cache[m] = val
+    end
+    return _cf18_cache[n]
+end
+
+# ── M8 ────────────────────────────────────────────────────────────────────────
+
+# Sigma basis for M8: (j, k) with j=0..7, k=0..(7-j)  → 36 pairs
+const _m8_sigma_basis = [(j, k) for j in 0:7 for k in 0:(7 - j)]
+const _m8_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m8!()
+    ns   = 1:90
+    # 36 sigma cols + n^0..n^3 * τ(n) + n^0..n^1 * cf16(n) = 36+4+2 = 42 cols
+    ncol = 42
+    A    = zeros(Rational{BigInt}, length(ns), ncol)
+    b    = Rational{BigInt}[M_direct(8, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m8_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau  = ramanujan_tau(n)
+        cf16 = cusp_form_16(n)
+        A[i, 37] = Rational{BigInt}(tau)
+        A[i, 38] = Rational{BigInt}(n) * Rational{BigInt}(tau)
+        A[i, 39] = Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+        A[i, 40] = Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+        A[i, 41] = Rational{BigInt}(cf16)
+        A[i, 42] = Rational{BigInt}(n) * Rational{BigInt}(cf16)
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m8_coeffs[] = x
+end
+
+"""
+    M8(n) -> Rational{BigInt}
+
+Closed-form M_8(n) via divisor power sums and cusp-form coefficients.
+At weight 16, S_16 = span{Δ·E₄}, contributing cusp_form_16(n) terms.
+Quasimodular mixing also introduces τ(n) and n^k·τ(n) terms.
+Coefficients fitted lazily on first call using M_direct for n = 1..90.
+"""
+function M8(n::Int)::Rational{BigInt}
+    isempty(_m8_coeffs[]) && _fit_m8!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m8_sigma_basis)
+        c = _m8_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau  = ramanujan_tau(n)
+    cf16 = cusp_form_16(n)
+    result += _m8_coeffs[][37] * Rational{BigInt}(tau)
+    result += _m8_coeffs[][38] * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    result += _m8_coeffs[][39] * Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+    result += _m8_coeffs[][40] * Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+    result += _m8_coeffs[][41] * Rational{BigInt}(cf16)
+    result += _m8_coeffs[][42] * Rational{BigInt}(n) * Rational{BigInt}(cf16)
+    return result
+end
+
+# ── M9 ────────────────────────────────────────────────────────────────────────
+
+# Sigma basis for M9: (j, k) with j=0..8, k=0..(8-j)  → 45 pairs
+const _m9_sigma_basis = [(j, k) for j in 0:8 for k in 0:(8 - j)]
+const _m9_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m9!()
+    ns   = 1:110
+    # 45 sigma cols + n^0..n^3*τ + n^0..n^1*cf16 + n^0..n^1*cf18 = 45+4+2+2 = 53 cols
+    ncol = 53
+    A    = zeros(Rational{BigInt}, length(ns), ncol)
+    b    = Rational{BigInt}[M_direct(9, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m9_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau  = ramanujan_tau(n)
+        cf16 = cusp_form_16(n)
+        cf18 = cusp_form_18(n)
+        A[i, 46] = Rational{BigInt}(tau)
+        A[i, 47] = Rational{BigInt}(n) * Rational{BigInt}(tau)
+        A[i, 48] = Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+        A[i, 49] = Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+        A[i, 50] = Rational{BigInt}(cf16)
+        A[i, 51] = Rational{BigInt}(n) * Rational{BigInt}(cf16)
+        A[i, 52] = Rational{BigInt}(cf18)
+        A[i, 53] = Rational{BigInt}(n) * Rational{BigInt}(cf18)
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m9_coeffs[] = x
+end
+
+"""
+    M9(n) -> Rational{BigInt}
+
+Closed-form M_9(n) via divisor power sums and cusp-form coefficients.
+At weight 18, S_18 = span{Δ·E₆}, contributing cusp_form_18(n) terms.
+Quasimodular mixing also introduces τ(n), n^k·τ(n), and cusp_form_16(n) terms.
+Coefficients fitted lazily on first call using M_direct for n = 1..110.
+"""
+function M9(n::Int)::Rational{BigInt}
+    isempty(_m9_coeffs[]) && _fit_m9!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m9_sigma_basis)
+        c = _m9_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau  = ramanujan_tau(n)
+    cf16 = cusp_form_16(n)
+    cf18 = cusp_form_18(n)
+    result += _m9_coeffs[][46] * Rational{BigInt}(tau)
+    result += _m9_coeffs[][47] * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    result += _m9_coeffs[][48] * Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+    result += _m9_coeffs[][49] * Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+    result += _m9_coeffs[][50] * Rational{BigInt}(cf16)
+    result += _m9_coeffs[][51] * Rational{BigInt}(n) * Rational{BigInt}(cf16)
+    result += _m9_coeffs[][52] * Rational{BigInt}(cf18)
+    result += _m9_coeffs[][53] * Rational{BigInt}(n) * Rational{BigInt}(cf18)
+    return result
+end
+
 # Direct combinatorial M_a(n)
 """
     M_direct(a, n) -> Int

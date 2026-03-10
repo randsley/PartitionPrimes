@@ -45,6 +45,26 @@ function E5(n::Int)
     )
 end
 
+function E6(n::Int)
+    # Degree d=4 expression from null space of prime evaluation matrix at a_max=7.
+    # Vanishes iff n is prime. Involves M6 and M7 via τ-cancellation mechanism.
+    m4  = M4(n)
+    m5  = M5(n)
+    m6  = M6(n)
+    m7  = M7(n)
+    bn  = big(n)
+    return (
+        (105367732470 - 277943208789*bn + 289613157079*bn^2
+         - 145583618619*bn^3 + 28545937859*bn^4) * M1(n)
+        + (-51324522800*bn^3 + 4292382480*bn^4) * M2(n)
+        + (-40313554176*bn^3 + 1776519808*bn^4) * M3(n)
+        + (-32888346624*bn^3 + 770273280*bn^4) * m4
+        + (-7741440000*bn^3 - 154828800*bn^4) * m5
+        + (-483548921856000 + 37196070912000*bn) * m6
+        + 892705701888000 * m7
+    )
+end
+
 function is_prime_trial(n::Int)::Bool
     n < 2 && return false
     n == 2 && return true
