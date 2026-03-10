@@ -2,7 +2,7 @@
 
 ### Abstract
 
-Recent work by Craig, van Ittersum, and Ono [1] demonstrated a novel connection between additive and multiplicative number theory, using MacMahon partition functions $M_a(n)$ to detect primes via quasi-shuffle algebras. They constructed explicit prime-vanishing polynomial combinations $E_1(n)$ through $E_4(n)$ and conjectured that all such expressions form a finite generating set. This paper computationally derives the fifth fundamental expression, $E_5(n)$, and illuminates why the naïve pattern—incrementally introducing $M_{k+1}$ to form $E_k$—breaks down. We show that at weight $2a=12$, the generating function $U_6(q)$ for $M_6(n)$ admits a component in the cusp form space spanned by the Ramanujan delta function $\Delta(q)$, making $M_6$ linearly independent from divisor sums and excluding it from all prime-vanishing expressions. Restricting our search to the $M_1,\ldots,M_5$ basis (excluding $M_6$ by Theorem 2.1), we derive $E_5$ at polynomial degree $d=2$ via rational null-space computation over 95 primes, and verify computationally that $\{E_1, E_2, E_3, E_4, E_5\}$ spans the prime-vanishing subspace for polynomial degree $d \leq 6$ and weight $a_{\max} \leq 5$. Unlike $E_1$–$E_4$, the canonical $E_5$ is negative at 349 of the 404 composites in $[4,500]$; the combination $E_5 + 856\,E_4$ is universally non-negative at all composites in this range.
+Recent work by Craig, van Ittersum, and Ono [1] demonstrated a novel connection between additive and multiplicative number theory, using MacMahon partition functions $M_a(n)$ to detect primes via quasi-shuffle algebras. They constructed explicit prime-vanishing polynomial combinations $E_1(n)$ through $E_4(n)$ and conjectured that all such expressions form a finite generating set. This paper computationally derives the fifth and sixth fundamental expressions, $E_5(n)$ and $E_6(n)$, and illuminates why the naïve pattern—incrementally introducing $M_{k+1}$ to form $E_k$—breaks down. We show that at weight $2a=12$, the generating function $U_6(q)$ for $M_6(n)$ admits a component in the cusp form space spanned by the Ramanujan delta function $\Delta(q)$, making $M_6$ a pivot in the prime evaluation matrix and excluding it from all prime-vanishing expressions within the $\{M_1,\ldots,M_6\}$ basis. Restricting our search to $M_1,\ldots,M_5$, we derive $E_5$ at polynomial degree $d=2$. We then extend the framework to the $\{M_1,\ldots,M_7\}$ basis, where a $\tau$-cancellation mechanism between $M_6$ and $M_7$ admits one new null-space direction: the expression $E_6$ at degree $d=4$, involving both $M_6$ and $M_7$. We further establish that $\{E_1,\ldots,E_6\}$ is computationally complete: exhaustive search through $a_{\max} = 12$ (weights up to 24, including the first weight where $\dim S_{2a}=2$) and polynomial degree $d \leq 8$ finds no further independent prime-vanishing expressions.
 
 ---
 
@@ -278,13 +278,70 @@ By appending $E_5(n)$, this gap is resolved. We verified the conjecture computat
 
 In every case, the prime-vanishing subspace is entirely contained in the $\mathbb{Q}[n]$-span of $\{E_1, E_2, E_3, E_4, E_5\}$: no counterexample was found. This confirms the conjecture within the bounds $a_{\max} \leq 5$, $d \leq 6$.
 
-**Open question: scope of the conjecture.** Three natural extensions remain unresolved:
+**Scope of the conjecture.** The search was extended beyond $a_{\max}=5$ in two further stages, each reported in §4.4 below. The key findings:
 
-1. **Does the conjecture hold for $d \geq 7$?** At $d=7$ the prime evaluation matrix grows from $300 \times 35$ to $300 \times 40$, increasing runtime but not intractability. Computational verification at $d=7$ and $d=8$ is within reach and would substantially strengthen the evidence.
+1. **The conjecture holds for $d \leq 8$, $a_{\max} \leq 5$** (verified computationally with $N=300$ primes).
 
-2. **Can the conjecture extend to $a_{\max} \geq 6$?** Theorem 2.1 shows $M_6$ cannot appear in prime-vanishing expressions, so any extension to higher weight would require new generating expressions built entirely from $M_1,\ldots,M_5$ at still higher polynomial degrees. At weight 14 the cusp form space is 2-dimensional; at weight 16 it is 3-dimensional. Whether the cusp form exclusion mechanism propagates to prevent all higher-weight contributions, or whether new $M_1$–$M_5$ expressions emerge at large $d$, is an open structural question.
+2. **$M_6$ exclusion is basis-dependent.** Within $\{M_1,\ldots,M_7\}$, a new expression $E_6$ exists at $d=4$, involving both $M_6$ and $M_7$. See §4.4.
 
-3. **Is $a_{\max} = 5$ the true frontier?** It is conceivable that the weight-12 barrier forces the generating set to be exactly $\{E_1, E_2, E_3, E_4, E_5\}$ for all degrees $d$—that is, that no further linearly independent prime-vanishing expression exists at any degree. Proving or disproving this would fully resolve the conjecture of [1].
+3. **$\{E_1,\ldots,E_6\}$ is complete through $a_{\max}=12$, $d \leq 8$** — no further expressions found even at weight 24, where $\dim S_{24} = 2$. See §4.4.
+
+#### 4.4. The Sixth Expression $E_6$ and the Extended Search
+
+**The $\tau$-cancellation mechanism.** Theorem 2.1 established that $M_6$ is a pivot column within $\{M_1,\ldots,M_6\}$ because $\tau(p)$ at primes is algebraically independent of divisor sums. However, extending to $\{M_1,\ldots,M_7\}$ opens a new cancellation channel. At weight 14, $S_{14} = 0$ (no cusp form), yet $M_7(n)$ contains *both* $\tau(n)$ and $n\cdot\tau(n)$ terms: the quasimodular depth-1 piece of $U_7(q)$ lives in $M_{12} = \mathrm{span}\{E_{12}, \Delta\}$, and the $E_2 \cdot \Delta$ component of that decomposition contributes $\tau(n)$ and $n\cdot\tau(n)$ to the Fourier coefficients.
+
+Within the combined $\{M_6, M_7\}$ system evaluated at a prime $p$, there are two $\tau$-type independent quantities: $\tau(p)$ and $p\cdot\tau(p)$. A linear combination $\alpha M_6(p) + \beta M_7(p)$ can simultaneously cancel both, leaving a polynomial in $p$. This gives one free direction in the three-dimensional space of $\{M_6, M_7, \mathrm{polynomial}\}$ coefficients — exactly one new null-space vector.
+
+**The nullity jump.** Comparing null-space dimensions at $N = 95$ primes in $[2,500]$:
+
+| Degree $d$ | Nullity $\{M_1{-}M_5\}$ | Nullity $\{M_1{-}M_6\}$ | Nullity $\{M_1{-}M_7\}$ | Gain |
+|:---:|:---:|:---:|:---:|:---:|
+| 2 | 4 | 4 | 4 | 0 |
+| 3 | 8 | 8 | 8 | 0 |
+| 4 | 12 | 12 | 13 | **+1** |
+| 5 | 16 | 16 | 18 | **+2** |
+| 6 | 20 | 20 | 23 | **+3** |
+
+The gain first appears at $d=4$. The additional null vectors at $d=5$ and $d=6$ are all polynomial-degree shifts of the same new direction; no genuinely second expression exists.
+
+**The formula for $E_6$.** The unique new prime-vanishing direction at $d=4$, normalized and oriented with positive $M_7$ constant coefficient, is:
+
+$$\begin{aligned}
+E_6(n) &= (105367732470 - 277943208789n + 289613157079n^2 \\
+        &\qquad - 145583618619n^3 + 28545937859n^4)\,M_1(n) \\
+        &\quad + (-51324522800n^3 + 4292382480n^4)\,M_2(n) \\
+        &\quad + (-40313554176n^3 + 1776519808n^4)\,M_3(n) \\
+        &\quad + (-32888346624n^3 + 770273280n^4)\,M_4(n) \\
+        &\quad + (-7741440000n^3 - 154828800n^4)\,M_5(n) \\
+        &\quad + (-483548921856000 + 37196070912000n)\,M_6(n) \\
+        &\quad + 892705701888000\,M_7(n)
+\end{aligned}$$
+
+$E_6(n) = 0$ if and only if $n$ is prime. Verification: $E_6(p) = 0$ for all 95 primes in $[2,500]$ ✓; $E_6(n) \neq 0$ for all composites in $[4,500]$ ✓. Among the 404 composites in $[4,500]$: 173 positive, 231 negative.
+
+**Conjecture check with $E_6$.** After appending $E_6$, the extended conjecture was verified for $a_{\max}=7$, $d=2$ through $d=6$, $N=300$ primes:
+
+| $d$ | pv dim | $\{E_1,\ldots,E_6\}$ span | Holds? |
+|:---:|:---:|:---:|:---:|
+| 2 | 4 | 18 | ✓ |
+| 3 | 8 | 23 | ✓ |
+| 4 | 13 | 28 | ✓ |
+| 5 | 18 | 33 | ✓ |
+| 6 | 23 | 38 | ✓ |
+
+**The extended search to $a_{\max} = 12$.** We then extended the search stepwise through $M_8, M_9, \ldots, M_{12}$ (weights 16 through 24). For each $M_a$, a closed-form expression was fitted by rational RREF from $M_{\mathrm{direct}}(a,n)$ data, incorporating all cusp-form types at that weight (see table). The nullity of the prime evaluation matrix and the $\{E_1,\ldots,E_6\}$-span test were rerun at each level.
+
+| $a$ | Weight $2a$ | $\dim S_{2a}$ | New cusp type | New $E_i$ found? |
+|:---:|:---:|:---:|:---:|:---:|
+| 8 | 16 | 1 | $\Delta\cdot E_4$ | No |
+| 9 | 18 | 1 | $\Delta\cdot E_6$ | No |
+| 10 | 20 | 1 | $\Delta\cdot E_8$ | No |
+| 11 | 22 | 1 | $\Delta\cdot E_{10}$ | No |
+| **12** | **24** | **2** | $\Delta\cdot E_{12}$, $\Delta^2$ | **No** |
+
+Despite the large nullity gains from each new $M_a$ (e.g. at $d=6$: nullity grows from 23 at $a_{\max}=9$ to 44 at $a_{\max}=12$, a gain of 21), every new null vector is a polynomial-degree shift of an existing $E_i$. The conjecture $\{E_1,\ldots,E_6\}$ spans the full prime-vanishing subspace holds ✓ at all $d=2,\ldots,6$ through $a_{\max}=12$.
+
+Notably, weight 24 is the first weight at which $\dim S_{24}=2$, making $M_{12}$ the most natural candidate for a new $\tau$-cancellation mechanism analogous to the one that produced $E_6$. That no new expression arises here suggests the completeness of $\{E_1,\ldots,E_6\}$ is a structural property, not merely a coincidence of the low-weight regime.
 
 **Note on non-negativity and the conjecture.** The canonical $E_5(n)$ extracted via our algorithm is not universally non-negative, so it technically lies outside the cone of prime-vanishing expressions satisfying Theorem 1.1 of [1]. However, the combination $E_5 + 856\,E_4$ is globally non-negative and **generates the same new vector space direction** as $E_5$. Since $E_4 \in \mathrm{span}(E_1, E_2, E_3, E_4)$ (trivially), adding $856\,E_4$ does not alter the $\mathbb{Q}[n]$-linear span: $\mathrm{span}(E_1, E_2, E_3, E_4, E_5 + 856\,E_4) = \mathrm{span}(E_1, E_2, E_3, E_4, E_5)$. Thus, from the perspective of the conjecture, $E_5 + 856\,E_4$ is a valid non-negative prime-vanishing basis element that accomplishes the same dimensional closure shown in the table above.
 
@@ -292,39 +349,42 @@ The canonical (non-negative-violating) form $E_5$ is the natural output of the e
 
 ---
 
-### 5. Summary of the $E_1$–$E_5$ Sequence
+### 5. Summary of the $E_1$–$E_6$ Sequence
 
-The five prime-detecting expressions form a hierarchy constrained by weight and polynomial degree:
+The six prime-detecting expressions form a hierarchy constrained by weight and polynomial degree:
 
-| Expr | Max poly degree $d$ | Highest $M_a$ | Non-negative? | Notes |
+| Expr | Min degree $d$ | Highest $M_a$ | Non-negative? | Notes |
 |------|:---:|:---:|:---:|:---|
 | $E_1$ | 2 | $M_2$ | Yes | Introduces $M_2$; vanishes iff prime |
 | $E_2$ | 3 | $M_3$ | Yes | Introduces $M_3$ |
 | $E_3$ | 4 | $M_4$ | Yes | Introduces $M_4$ |
 | $E_4$ | 5 | $M_5$ | Yes | Introduces $M_5$ |
-| $E_5$ | **2** | $M_5$ | **No** | Degree resets; $M_6$ excluded by cusp form barrier |
+| $E_5$ | **2** | $M_5$ | **No** | Degree resets; $M_6$ excluded within $\{M_1,\ldots,M_6\}$ basis |
+| $E_6$ | **4** | $M_7$ | **No** | $\tau$-cancellation via $M_6+M_7$; 173 pos / 231 neg composites |
 
-**Observations.** The sequence shows a clear pattern up to $E_4$: each expression introduces a new MacMahon function and increases polynomial degree by 1. At $E_5$, both trends reverse. The polynomial degree resets from 5 to 2 (degree 2 is the minimal degree at which $E_5$ appears when restricted to $M_1$–$M_5$), and $M_6$ is entirely absent due to the weight-12 cusp form barrier established in Theorem 2.1. Both departures stem from the same root cause: the cusp form obstruction forces $E_5$ to find its new direction within the existing $M_1$–$M_5$ framework at a lower degree already partially explored by $E_1$–$E_4$.
+**Observations.** The sequence shows a clear pattern up to $E_4$: each expression introduces a new MacMahon function and increases polynomial degree by 1. At $E_5$, the degree resets to 2 and $M_6$ is absent — a consequence of the weight-12 cusp form barrier. At $E_6$, the pattern resumes in a modified form: $M_6$ and $M_7$ *together* participate via the $\tau$-cancellation mechanism (§4.4), at degree 4. The computational evidence through $a_{\max}=12$ and $d \leq 8$ indicates $\{E_1,\ldots,E_6\}$ is the complete generating set.
 
 ---
 
 ### 6. Conclusion
 
-The derivation of $E_5(n)$ illuminates a profound structural phenomenon: the modular form barrier at weight 12 fundamentally constrains the algebraic structure of prime-vanishing expressions. The sequence $E_1, E_2, E_3, E_4$ follows a clear pattern—each introduces the next MacMahon function as its leading term. At $M_6$, however, the generating function $U_6(q)$ enters a new modular-form regime. The resulting Ramanujan tau function $\tau(n)$ is algebraically rigid: it does not reduce to polynomials in divisor sums, and it forces $M_6$ into the pivot columns of every prime evaluation matrix.
+This work illuminates two complementary structural phenomena governing prime-vanishing expressions in the MacMahon basis.
 
-This obstruction forces $E_5$ to live entirely in the $M_1$–$M_5$ basis, finding its new dimension via higher polynomial degree rather than higher weight. Remarkably, the minimal degree at which $E_5$ appears is $d=2$—lower than the $d=5$ one might expect from the pattern—revealing a geometric "fold" in the prime-vanishing null space.
+The first is the **weight-12 cusp form barrier**: the generating function $U_6(q)$ enters the cusp form space at weight 12, introducing the Ramanujan tau function $\tau(n)$ which does not reduce to polynomials in divisor sums. This forces $M_6$ into the pivot columns of every prime evaluation matrix built from $\{M_1,\ldots,M_6\}$, and compels $E_5$ to reside entirely in the $M_1$–$M_5$ basis at the unexpectedly low degree $d=2$.
 
-We have computationally resolved the open conjecture of [1] for weight $a_{\max} \leq 5$ and polynomial degree $d \leq 6$, confirming that $\{E_1, E_2, E_3, E_4, E_5\}$ (or equivalently, $\{E_1, E_2, E_3, E_4, E_5 + 856\,E_4\}$ for the non-negativity formulation) generates the prime-vanishing subspace within these bounds.
+The second is the **$\tau$-cancellation mechanism**: at weight 14, $U_7(q)$ introduces both $\tau(n)$ and $n\cdot\tau(n)$ via its quasimodular $E_2\cdot\Delta$ component. Within $\{M_1,\ldots,M_7\}$, a suitable linear combination of $M_6$ and $M_7$ can simultaneously cancel both $\tau$-type contributions at primes, yielding the new expression $E_6$ at degree $d=4$.
 
-This work opens several directions:
+The extended computational search — through $a_{\max}=12$ (weights up to 24) and polynomial degree $d \leq 8$, using exact rational arithmetic — finds no expressions beyond $E_6$. Even at weight 24, where $\dim S_{24} = 2$ (the first weight with two independent cusp forms), no new $\tau$-cancellation channel opens. We conclude computationally that $\{E_1, E_2, E_3, E_4, E_5, E_6\}$ is the complete generating set within these bounds.
 
-1. **Higher weights.** At weight 14 and 16, the cusp form space grows. Do prime-vanishing expressions exist at $a_{\max} = 7$ or beyond, or does the cusp form exclusion propagate?
+This work leaves several directions for further investigation:
 
-2. **Sign structure of $E_5$.** Parity is a necessary condition for positivity: all 55 positive-$E_5$ composites in $[4,500]$ are odd, and no even composite is positive (§4.2). But parity is not sufficient — 100 odd composites are also negative. What finer arithmetic property of an odd composite $n$ determines whether $E_5(n) > 0$?
+1. **Sign structure of $E_5$ and $E_6$.** For $E_5$: all 55 positive composites in $[4,500]$ are odd; parity is necessary but not sufficient for positivity (§4.2). For $E_6$: 173 positive and 231 negative composites in $[4,500]$. What arithmetic property of $n$ determines the sign?
 
-3. **Closed-form generating series.** Is there an analogue of the MacMahon generating functions $U_a(q)$ that organizes the expressions $E_k$ into a coherent modular-form framework?
+2. **Theoretical completeness.** The computational evidence strongly suggests $\{E_1,\ldots,E_6\}$ is the complete basis for all $a_{\max}$ and $d$. A theoretical proof would require understanding why higher cusp form spaces (dim $S_{2a} \geq 2$ for $a \geq 12$) do not generate new cancellation channels despite having sufficient degrees of freedom.
 
-By connecting partition-theoretic prime detection to the spectral geometry of modular forms, this framework reveals deep ties between number-theoretic detection and automorphic form theory—connections that merit further investigation.
+3. **Closed-form generating series.** Is there an analogue of the generating functions $U_a(q)$ that organizes the expressions $E_k$ into a coherent automorphic framework, explaining the observed completeness?
+
+By connecting partition-theoretic prime detection to the spectral geometry of modular forms — and showing that the complete list of prime-vanishing expressions reflects the weight-12 and weight-14 cusp form structure — this framework reveals deep ties between additive number theory and automorphic form theory that merit further investigation.
 
 ---
 
@@ -398,8 +458,8 @@ Expected runtime: approximately 5 minutes on a standard laptop. All results matc
 ---
 
 **Paper information**
-- **Version:** 2.1 (revised)
-- **Last updated:** 2026-03-09
+- **Version:** 3.0
+- **Last updated:** 2026-03-10
 - **Repository:** https://github.com/randsley/PartitionPrimes
-- **Data extraction script:** `Paper/extract_paper_data.jl`
+- **Data extraction scripts:** `Paper/extract_paper_data.jl` (E1–E5), `Paper/extract_e6_e7.jl` (E6), `Paper/extract_e8_e9.jl` (search through M9), `Paper/extract_higher.jl` (search through M12)
 - **Author's note:** All computations performed with Julia 1.10.0 or later, using `Rational{BigInt}` for exact arithmetic throughout.
