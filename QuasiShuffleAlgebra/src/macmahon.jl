@@ -388,6 +388,313 @@ function M9(n::Int)::Rational{BigInt}
     return result
 end
 
+"""
+    cusp_form_20(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)·E₈(q)  (unique cusp form of weight 20).
+E₈ = 1 + 480·Σσ₇(m)q^m, so (Δ·E₈)[n] = τ(n) + 480·Σ_{k<n} τ(k)·σ₇(n-k).
+"""
+const _cf20_cache = BigInt[]
+function cusp_form_20(n::Int)::BigInt
+    n <= length(_cf20_cache) && return _cf20_cache[n]
+    N = max(n, length(_cf20_cache) + 64)
+    ramanujan_tau(N)
+    resize!(_cf20_cache, N)
+    for m in 1:N
+        val = _tau_cache[m]
+        for k in 1:m-1
+            val += big(480) * _tau_cache[k] * σ(7, m - k)
+        end
+        _cf20_cache[m] = val
+    end
+    return _cf20_cache[n]
+end
+
+"""
+    cusp_form_22(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)·E₁₀(q)  (unique cusp form of weight 22).
+E₁₀ = 1 - 264·Σσ₉(m)q^m, so (Δ·E₁₀)[n] = τ(n) - 264·Σ_{k<n} τ(k)·σ₉(n-k).
+"""
+const _cf22_cache = BigInt[]
+function cusp_form_22(n::Int)::BigInt
+    n <= length(_cf22_cache) && return _cf22_cache[n]
+    N = max(n, length(_cf22_cache) + 64)
+    ramanujan_tau(N)
+    resize!(_cf22_cache, N)
+    for m in 1:N
+        val = _tau_cache[m]
+        for k in 1:m-1
+            val -= big(264) * _tau_cache[k] * σ(9, m - k)
+        end
+        _cf22_cache[m] = val
+    end
+    return _cf22_cache[n]
+end
+
+"""
+    cusp_form_24a(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)·E₁₂(q)  (first basis vector of S_24).
+E₁₂ = 1 + (65520/691)·Σσ₁₁(m)q^m.
+Using integer form: (Δ·E₁₂)[n] = τ(n) + (65520/691)·Σ_{k<n} τ(k)·σ₁₁(n-k).
+Returns numerator only (denominator 691); caller multiplies by 691 if needed.
+Stored as Rational{BigInt}.
+"""
+const _cf24a_cache = Rational{BigInt}[]
+function cusp_form_24a(n::Int)::Rational{BigInt}
+    n <= length(_cf24a_cache) && return _cf24a_cache[n]
+    N = max(n, length(_cf24a_cache) + 64)
+    ramanujan_tau(N)
+    resize!(_cf24a_cache, N)
+    for m in 1:N
+        val = Rational{BigInt}(_tau_cache[m])
+        for k in 1:m-1
+            val += (big(65520) // big(691)) * Rational{BigInt}(_tau_cache[k]) * Rational{BigInt}(σ(11, m - k))
+        end
+        _cf24a_cache[m] = val
+    end
+    return _cf24a_cache[n]
+end
+
+"""
+    cusp_form_24b(n) -> BigInt
+
+Fourier coefficient of q^n in Δ(q)²  (second basis vector of S_24).
+Δ² = (Σ τ(k)q^k)² so (Δ²)[n] = Σ_{k=1}^{n-1} τ(k)·τ(n-k).
+"""
+const _cf24b_cache = BigInt[]
+function cusp_form_24b(n::Int)::BigInt
+    n <= length(_cf24b_cache) && return _cf24b_cache[n]
+    N = max(n, length(_cf24b_cache) + 64)
+    ramanujan_tau(N)
+    resize!(_cf24b_cache, N)
+    _cf24b_cache[1] = big(0)
+    for m in 2:N
+        val = big(0)
+        for k in 1:m-1
+            val += _tau_cache[k] * _tau_cache[m - k]
+        end
+        _cf24b_cache[m] = val
+    end
+    return _cf24b_cache[n]
+end
+
+# ── M10 ───────────────────────────────────────────────────────────────────────
+const _m10_sigma_basis = [(j, k) for j in 0:9 for k in 0:(9 - j)]   # 55 pairs
+const _m10_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m10!()
+    ns   = 1:120
+    # 55 sigma + n^0..3·τ + n^0..1·cf16 + n^0..1·cf18 + n^0..1·cf20 = 55+4+2+2+2 = 65
+    ncol = 65
+    A    = zeros(Rational{BigInt}, length(ns), ncol)
+    b    = Rational{BigInt}[M_direct(10, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m10_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau = ramanujan_tau(n)
+        A[i, 56] = Rational{BigInt}(tau)
+        A[i, 57] = Rational{BigInt}(n) * Rational{BigInt}(tau)
+        A[i, 58] = Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+        A[i, 59] = Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+        A[i, 60] = Rational{BigInt}(cusp_form_16(n))
+        A[i, 61] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+        A[i, 62] = Rational{BigInt}(cusp_form_18(n))
+        A[i, 63] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+        A[i, 64] = Rational{BigInt}(cusp_form_20(n))
+        A[i, 65] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m10_coeffs[] = x
+end
+
+"""
+    M10(n) -> Rational{BigInt}
+
+Closed-form M_10(n). At weight 20, S_20 = span{Δ·E₈}, contributing cusp_form_20(n).
+Coefficients fitted lazily on first call using M_direct for n = 1..120.
+"""
+function M10(n::Int)::Rational{BigInt}
+    isempty(_m10_coeffs[]) && _fit_m10!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m10_sigma_basis)
+        c = _m10_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau = ramanujan_tau(n)
+    result += _m10_coeffs[][56] * Rational{BigInt}(tau)
+    result += _m10_coeffs[][57] * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    result += _m10_coeffs[][58] * Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+    result += _m10_coeffs[][59] * Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+    result += _m10_coeffs[][60] * Rational{BigInt}(cusp_form_16(n))
+    result += _m10_coeffs[][61] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+    result += _m10_coeffs[][62] * Rational{BigInt}(cusp_form_18(n))
+    result += _m10_coeffs[][63] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+    result += _m10_coeffs[][64] * Rational{BigInt}(cusp_form_20(n))
+    result += _m10_coeffs[][65] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+    return result
+end
+
+# ── M11 ───────────────────────────────────────────────────────────────────────
+const _m11_sigma_basis = [(j, k) for j in 0:10 for k in 0:(10 - j)]  # 66 pairs
+const _m11_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m11!()
+    ns   = 1:140
+    # 66 sigma + 4 tau + 2·cf16 + 2·cf18 + 2·cf20 + 2·cf22 = 66+12 = 78
+    ncol = 78
+    A    = zeros(Rational{BigInt}, length(ns), ncol)
+    b    = Rational{BigInt}[M_direct(11, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m11_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau = ramanujan_tau(n)
+        A[i, 67] = Rational{BigInt}(tau)
+        A[i, 68] = Rational{BigInt}(n) * Rational{BigInt}(tau)
+        A[i, 69] = Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+        A[i, 70] = Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+        A[i, 71] = Rational{BigInt}(cusp_form_16(n))
+        A[i, 72] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+        A[i, 73] = Rational{BigInt}(cusp_form_18(n))
+        A[i, 74] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+        A[i, 75] = Rational{BigInt}(cusp_form_20(n))
+        A[i, 76] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+        A[i, 77] = Rational{BigInt}(cusp_form_22(n))
+        A[i, 78] = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_22(n))
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m11_coeffs[] = x
+end
+
+"""
+    M11(n) -> Rational{BigInt}
+
+Closed-form M_11(n). At weight 22, S_22 = span{Δ·E₁₀}, contributing cusp_form_22(n).
+Coefficients fitted lazily on first call using M_direct for n = 1..140.
+"""
+function M11(n::Int)::Rational{BigInt}
+    isempty(_m11_coeffs[]) && _fit_m11!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m11_sigma_basis)
+        c = _m11_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau = ramanujan_tau(n)
+    result += _m11_coeffs[][67] * Rational{BigInt}(tau)
+    result += _m11_coeffs[][68] * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    result += _m11_coeffs[][69] * Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+    result += _m11_coeffs[][70] * Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+    result += _m11_coeffs[][71] * Rational{BigInt}(cusp_form_16(n))
+    result += _m11_coeffs[][72] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+    result += _m11_coeffs[][73] * Rational{BigInt}(cusp_form_18(n))
+    result += _m11_coeffs[][74] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+    result += _m11_coeffs[][75] * Rational{BigInt}(cusp_form_20(n))
+    result += _m11_coeffs[][76] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+    result += _m11_coeffs[][77] * Rational{BigInt}(cusp_form_22(n))
+    result += _m11_coeffs[][78] * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_22(n))
+    return result
+end
+
+# ── M12 ───────────────────────────────────────────────────────────────────────
+const _m12_sigma_basis = [(j, k) for j in 0:11 for k in 0:(11 - j)]  # 78 pairs
+const _m12_coeffs      = Ref{Vector{Rational{BigInt}}}(Rational{BigInt}[])
+
+function _fit_m12!()
+    ns   = 1:160
+    # 78 sigma + 4 tau + 2·cf16 + 2·cf18 + 2·cf20 + 2·cf22 + 2·cf24a + 2·cf24b = 78+16 = 94
+    ncol = 94
+    A    = zeros(Rational{BigInt}, length(ns), ncol)
+    b    = Rational{BigInt}[M_direct(12, n) for n in ns]
+    for (i, n) in enumerate(ns)
+        bn = big(n)
+        for (ci, (j, k)) in enumerate(_m12_sigma_basis)
+            A[i, ci] = bn^k * Rational{BigInt}(σ(2j + 1, n))
+        end
+        tau = ramanujan_tau(n)
+        A[i, 79]  = Rational{BigInt}(tau)
+        A[i, 80]  = Rational{BigInt}(n) * Rational{BigInt}(tau)
+        A[i, 81]  = Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+        A[i, 82]  = Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+        A[i, 83]  = Rational{BigInt}(cusp_form_16(n))
+        A[i, 84]  = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+        A[i, 85]  = Rational{BigInt}(cusp_form_18(n))
+        A[i, 86]  = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+        A[i, 87]  = Rational{BigInt}(cusp_form_20(n))
+        A[i, 88]  = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+        A[i, 89]  = Rational{BigInt}(cusp_form_22(n))
+        A[i, 90]  = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_22(n))
+        A[i, 91]  = cusp_form_24a(n)
+        A[i, 92]  = Rational{BigInt}(n) * cusp_form_24a(n)
+        A[i, 93]  = Rational{BigInt}(cusp_form_24b(n))
+        A[i, 94]  = Rational{BigInt}(n) * Rational{BigInt}(cusp_form_24b(n))
+    end
+    aug = hcat(A, reshape(b, :, 1))
+    pcs = rational_rref!(aug)
+    x   = zeros(Rational{BigInt}, ncol)
+    for (row, pc) in enumerate(pcs)
+        pc > ncol && break
+        x[pc] = aug[row, ncol + 1]
+    end
+    _m12_coeffs[] = x
+end
+
+"""
+    M12(n) -> Rational{BigInt}
+
+Closed-form M_12(n). At weight 24, S_24 = span{Δ·E₁₂, Δ²} (dim 2).
+Two independent cusp-form types: cusp_form_24a and cusp_form_24b.
+Coefficients fitted lazily on first call using M_direct for n = 1..160.
+"""
+function M12(n::Int)::Rational{BigInt}
+    isempty(_m12_coeffs[]) && _fit_m12!()
+    bn     = big(n)
+    result = Rational{BigInt}(0)
+    for (ci, (j, k)) in enumerate(_m12_sigma_basis)
+        c = _m12_coeffs[][ci]
+        iszero(c) && continue
+        result += c * bn^k * Rational{BigInt}(σ(2j + 1, n))
+    end
+    tau = ramanujan_tau(n)
+    result += _m12_coeffs[][79]  * Rational{BigInt}(tau)
+    result += _m12_coeffs[][80]  * Rational{BigInt}(n) * Rational{BigInt}(tau)
+    result += _m12_coeffs[][81]  * Rational{BigInt}(n)^2 * Rational{BigInt}(tau)
+    result += _m12_coeffs[][82]  * Rational{BigInt}(n)^3 * Rational{BigInt}(tau)
+    result += _m12_coeffs[][83]  * Rational{BigInt}(cusp_form_16(n))
+    result += _m12_coeffs[][84]  * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_16(n))
+    result += _m12_coeffs[][85]  * Rational{BigInt}(cusp_form_18(n))
+    result += _m12_coeffs[][86]  * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_18(n))
+    result += _m12_coeffs[][87]  * Rational{BigInt}(cusp_form_20(n))
+    result += _m12_coeffs[][88]  * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_20(n))
+    result += _m12_coeffs[][89]  * Rational{BigInt}(cusp_form_22(n))
+    result += _m12_coeffs[][90]  * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_22(n))
+    result += _m12_coeffs[][91]  * cusp_form_24a(n)
+    result += _m12_coeffs[][92]  * Rational{BigInt}(n) * cusp_form_24a(n)
+    result += _m12_coeffs[][93]  * Rational{BigInt}(cusp_form_24b(n))
+    result += _m12_coeffs[][94]  * Rational{BigInt}(n) * Rational{BigInt}(cusp_form_24b(n))
+    return result
+end
+
 # Direct combinatorial M_a(n)
 """
     M_direct(a, n) -> Int

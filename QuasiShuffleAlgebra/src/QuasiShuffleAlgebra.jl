@@ -27,8 +27,8 @@ export zq_add, zq_scale, zq_multiply, cleanup!, evaluate_zq, all_words_up_to_wei
 export bernoulli
 export diamond_coeffs, diamond
 export quasishuffle, quasishuffle_words
-export σ, ramanujan_tau, M1, M2, M3, M4, M5, M6, M7, M8, M9, M_direct, M_macmahonesque
-export cusp_form_16, cusp_form_18
+export σ, ramanujan_tau, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M_direct, M_macmahonesque
+export cusp_form_16, cusp_form_18, cusp_form_20, cusp_form_22, cusp_form_24a, cusp_form_24b
 export d_operator
 export symmetrise
 export E1, E2, E3, E4, E5, E6, is_prime_partition, verify_range, is_prime_trial

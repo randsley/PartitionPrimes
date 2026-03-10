@@ -72,6 +72,12 @@ function eval_Ma(a::Int, n::Int)::Rational{BigInt}
         return M8(n)
     elseif a == 9
         return M9(n)
+    elseif a == 10
+        return M10(n)
+    elseif a == 11
+        return M11(n)
+    elseif a == 12
+        return M12(n)
     else
         return Rational{BigInt}(M_direct(a, n))
     end
