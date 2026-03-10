@@ -66,7 +66,9 @@ so 691 enters the denominator of any rational linear combination involving $E_{1
 
 #### 2.2. The Exclusion of $M_6$: The Pivot Discovery
 
-The presence of $\tau(n)$ in $M_6(n)$ fundamentally breaks the algebraic structure required for prime-vanishing expressions. Unlike the divisor sums $\sigma_k(p) = p^k + 1$ at primes, the Ramanujan tau function satisfies the Hasse–Weil bound $|\tau(p)| \leq 2p^{11/2}$ and does not reduce to a polynomial in $p$. Consequently, evaluating $n^k M_6(n)$ at primes yields linearly independent data that cannot be cancelled by divisor-sum combinations.
+The presence of $\tau(n)$ in $M_6(n)$ fundamentally breaks the algebraic structure required for prime-vanishing expressions within the $\{M_1,\ldots,M_5,M_6\}$ basis. Unlike the divisor sums $\sigma_k(p) = p^k + 1$ at primes, the Ramanujan tau function satisfies the Hasse–Weil bound $|\tau(p)| \leq 2p^{11/2}$ and does not reduce to a polynomial in $p$. Consequently, evaluating $n^k M_6(n)$ at primes yields linearly independent data that cannot be cancelled by any combination from $\{M_1,\ldots,M_5\}$ alone.
+
+*Remark on scope.* This obstruction is basis-dependent. As shown in §4 of [forthcoming], $M_7(n)$ also contains $\tau(n)$ and $n \cdot \tau(n)$ terms via the $E_2 \cdot \Delta$ component of its quasimodular depth-1 decomposition. Within the extended basis $\{M_1,\ldots,M_7\}$, specific linear combinations of $M_6$ and $M_7$ can mutually cancel both $\tau(p)$ and $p\cdot\tau(p)$ contributions, producing a prime-vanishing expression $E_6$ that involves both $M_6$ and $M_7$. The theorem below is therefore correctly stated as a result about the $\{M_1,\ldots,M_5,M_6\}$ basis specifically; it does not preclude $M_6$ from appearing in expressions built from a larger basis.
 
 We demonstrate this via the **prime evaluation matrix** $\mathbf{M}(d, a_{\max}, N)$: the $N \times (d+1) a_{\max}$ matrix whose rows are evaluations of $\{n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq a_{\max}\}$ at the first $N$ primes. All arithmetic is exact over $\mathbb{Q}$.
 
@@ -83,9 +85,11 @@ $$\dim\ker(\mathbf{M}(d, 6, N)) = \dim\ker(\mathbf{M}(d, 5, N))$$
 
 Adding the 3 columns $\{M_6, n M_6, n^2 M_6\}$ increases the rank by exactly 3 and leaves the nullity unchanged. In the RREF of $\mathbf{M}(2, 6, 95)$, all three $M_6$-associated columns are pivot columns. This was verified independently for $d=3$ (nullity 8 for both $a_{\max}=5$ and $a_{\max}=6$), and computationally confirmed for all $d \in \{0,1,4,5,6\}$.
 
-**Corollary.** No prime-vanishing expression can involve $M_6(n)$. The basis for the prime-vanishing null space is confined to $M_1, \ldots, M_5$. $\square$
+**Corollary (within $\{M_1,\ldots,M_6\}$).** No prime-vanishing expression formed solely from the basis $\{M_1,\ldots,M_6\}$ can have a non-zero $M_6$ coefficient. Within this basis, the prime-vanishing null space is identical to that of $\{M_1,\ldots,M_5\}$. $\square$
 
-*Terminology note.* In row-reduced echelon form (RREF), a **pivot column** is one that contains a leading 1 in some row; it represents a direction that is linearly independent of all preceding columns. A column is a pivot column if and only if it contributes a new dimension to the column space—equivalently, it has no free variable in the null space. The above result says that in the RREF of $\mathbf{M}(d,6,N)$, every column corresponding to $n^k M_6(n)$ is a pivot, so no null vector can have a non-zero entry in those positions.
+*Caution.* This corollary is basis-specific. It does not assert that $M_6$ is absent from all prime-vanishing expressions in any larger basis. Indeed, when $M_7$ is added, the combined basis $\{M_1,\ldots,M_7\}$ admits new prime-vanishing directions involving both $M_6$ and $M_7$—the expression $E_6$ being the first such direction (see §4.3).
+
+*Terminology note.* In row-reduced echelon form (RREF), a **pivot column** is one that contains a leading 1 in some row; it represents a direction that is linearly independent of all preceding columns. A column is a pivot column if and only if it contributes a new dimension to the column space—equivalently, it has no free variable in the null space. The above result says that in the RREF of $\mathbf{M}(d,6,N)$, every column corresponding to $n^k M_6(n)$ is a pivot, so no null vector within that matrix can have a non-zero entry in those positions.
 
 ---
 
