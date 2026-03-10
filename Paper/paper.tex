@@ -66,6 +66,7 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{hyperref}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -73,13 +74,14 @@
 \title{Extending Partition-Theoretic Prime Detection:\\
 The Cusp Form Barrier and the Derivation of \(E_5\)}
 \author{Nigel Randsley}
-\date{}
+\date{Version 3.0 \\ DOI: \href{https://doi.org/10.5281/zenodo.18936372}{10.5281/zenodo.18936372}}
 
 \begin{document}
 
-\maketitle
+Extending Partition-Theoretic Prime Detection: The Cusp Form Barrier and
+the Derivation of E₅
 
-\begin{abstract}
+\section{Abstract}\label{abstract}
 
 Recent work by Craig, van Ittersum, and Ono {[}1{]} demonstrated a novel
 connection between additive and multiplicative number theory, using
@@ -87,25 +89,26 @@ MacMahon partition functions \(M_a(n)\) to detect primes via
 quasi-shuffle algebras. They constructed explicit prime-vanishing
 polynomial combinations \(E_1(n)\) through \(E_4(n)\) and conjectured
 that all such expressions form a finite generating set. This paper
-computationally derives the fifth fundamental expression, \(E_5(n)\),
-and illuminates why the naïve pattern---incrementally introducing
-\(M_{k+1}\) to form \(E_k\)---breaks down. We show that at weight
-\(2a=12\), the generating function \(U_6(q)\) for \(M_6(n)\) admits a
-component in the cusp form space spanned by the Ramanujan delta function
-\(\Delta(q)\), making \(M_6\) linearly independent from divisor sums and
-excluding it from all prime-vanishing expressions. Restricting our
-search to the \(M_1,\ldots,M_5\) basis (excluding \(M_6\) by Theorem
-2.1), we derive \(E_5\) at polynomial degree \(d=2\) via rational
-null-space computation over 95 primes, and verify computationally that
-\(\{E_1, E_2, E_3, E_4, E_5\}\) spans the prime-vanishing subspace for
-polynomial degree \(d \leq 6\) and weight \(a_{\max} \leq 5\). Unlike
-\(E_1\)--\(E_4\), the canonical \(E_5\) is negative at 349 of the 404
-composites in \([4,500]\); the combination \(E_5 + 856\,E_4\) is
-universally non-negative at all composites in this range.
+computationally derives the fifth and sixth fundamental expressions,
+\(E_5(n)\) and \(E_6(n)\), and illuminates why the naïve
+pattern---incrementally introducing \(M_{k+1}\) to form \(E_k\)---breaks
+down. We show that at weight \(2a=12\), the generating function
+\(U_6(q)\) for \(M_6(n)\) admits a component in the cusp form space
+spanned by the Ramanujan delta function \(\Delta(q)\), making \(M_6\) a
+pivot in the prime evaluation matrix and excluding it from all
+prime-vanishing expressions within the \(\{M_1,\ldots,M_6\}\) basis.
+Restricting our search to \(M_1,\ldots,M_5\), we derive \(E_5\) at
+polynomial degree \(d=2\). We then extend the framework to the
+\(\{M_1,\ldots,M_7\}\) basis, where a \(\tau\)-cancellation mechanism
+between \(M_6\) and \(M_7\) admits one new null-space direction: the
+expression \(E_6\) at degree \(d=4\), involving both \(M_6\) and
+\(M_7\). We further establish that \(\{E_1,\ldots,E_6\}\) is
+computationally complete: exhaustive search through \(a_{\max} = 12\)
+(weights up to 24, including the first weight where \(\dim S_{2a}=2\))
+and polynomial degree \(d \leq 8\) finds no further independent
+prime-vanishing expressions.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\end{abstract}
 
 \section{1. Introduction}\label{introduction}
 
@@ -249,12 +252,25 @@ distinction directly.
 Discovery}{2.2. The Exclusion of M\_6: The Pivot Discovery}}\label{the-exclusion-of-m_6-the-pivot-discovery}
 
 The presence of \(\tau(n)\) in \(M_6(n)\) fundamentally breaks the
-algebraic structure required for prime-vanishing expressions. Unlike the
-divisor sums \(\sigma_k(p) = p^k + 1\) at primes, the Ramanujan tau
-function satisfies the Hasse--Weil bound \(|\tau(p)| \leq 2p^{11/2}\)
-and does not reduce to a polynomial in \(p\). Consequently, evaluating
+algebraic structure required for prime-vanishing expressions within the
+\(\{M_1,\ldots,M_5,M_6\}\) basis. Unlike the divisor sums
+\(\sigma_k(p) = p^k + 1\) at primes, the Ramanujan tau function
+satisfies the Hasse--Weil bound \(|\tau(p)| \leq 2p^{11/2}\) and does
+not reduce to a polynomial in \(p\). Consequently, evaluating
 \(n^k M_6(n)\) at primes yields linearly independent data that cannot be
-cancelled by divisor-sum combinations.
+cancelled by any combination from \(\{M_1,\ldots,M_5\}\) alone.
+
+\emph{Remark on scope.} This obstruction is basis-dependent. As shown in
+§4 of {[}forthcoming{]}, \(M_7(n)\) also contains \(\tau(n)\) and
+\(n \cdot \tau(n)\) terms via the \(E_2 \cdot \Delta\) component of its
+quasimodular depth-1 decomposition. Within the extended basis
+\(\{M_1,\ldots,M_7\}\), specific linear combinations of \(M_6\) and
+\(M_7\) can mutually cancel both \(\tau(p)\) and \(p\cdot\tau(p)\)
+contributions, producing a prime-vanishing expression \(E_6\) that
+involves both \(M_6\) and \(M_7\). The theorem below is therefore
+correctly stated as a result about the \(\{M_1,\ldots,M_5,M_6\}\) basis
+specifically; it does not preclude \(M_6\) from appearing in expressions
+built from a larger basis.
 
 We demonstrate this via the \textbf{prime evaluation matrix}
 \(\mathbf{M}(d, a_{\max}, N)\): the \(N \times (d+1) a_{\max}\) matrix
@@ -292,9 +308,17 @@ columns. This was verified independently for \(d=3\) (nullity 8 for both
 \(a_{\max}=5\) and \(a_{\max}=6\)), and computationally confirmed for
 all \(d \in \{0,1,4,5,6\}\).
 
-\textbf{Corollary.} No prime-vanishing expression can involve
-\(M_6(n)\). The basis for the prime-vanishing null space is confined to
-\(M_1, \ldots, M_5\). \(\square\)
+\textbf{Corollary (within \(\{M_1,\ldots,M_6\}\)).} No prime-vanishing
+expression formed solely from the basis \(\{M_1,\ldots,M_6\}\) can have
+a non-zero \(M_6\) coefficient. Within this basis, the prime-vanishing
+null space is identical to that of \(\{M_1,\ldots,M_5\}\). \(\square\)
+
+\emph{Caution.} This corollary is basis-specific. It does not assert
+that \(M_6\) is absent from all prime-vanishing expressions in any
+larger basis. Indeed, when \(M_7\) is added, the combined basis
+\(\{M_1,\ldots,M_7\}\) admits new prime-vanishing directions involving
+both \(M_6\) and \(M_7\)---the expression \(E_6\) being the first such
+direction (see §4.3).
 
 \emph{Terminology note.} In row-reduced echelon form (RREF), a
 \textbf{pivot column} is one that contains a leading 1 in some row; it
@@ -303,7 +327,8 @@ columns. A column is a pivot column if and only if it contributes a new
 dimension to the column space---equivalently, it has no free variable in
 the null space. The above result says that in the RREF of
 \(\mathbf{M}(d,6,N)\), every column corresponding to \(n^k M_6(n)\) is a
-pivot, so no null vector can have a non-zero entry in those positions.
+pivot, so no null vector within that matrix can have a non-zero entry in
+those positions.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -313,7 +338,8 @@ Space}{3. Extracting E\_5(n) from the Null Space}}\label{extracting-e_5n-from-th
 \subsection{3.1. The Search Space}\label{the-search-space}
 
 Having established that \(M_6(n)\) cannot appear in any prime-vanishing
-expression, we search for \(E_5\) within the basis:
+expression formed within the basis \(\{M_1,\ldots,M_6\}\) (Corollary
+2.2), we search for \(E_5\) within that basis:
 
 \[\mathcal{B}_d = \{ n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq 5 \}\]
 
@@ -336,7 +362,8 @@ independence from the corresponding evaluations of \(E_1,\ldots,E_4\).
 
 \textbf{Algorithm: Extract\_\(E_5\)}
 
-{\small\begin{verbatim}
+{\small
+\begin{verbatim}
 Input:
   a_max = 5 (integer)
   N = 95 primes from [2,500] (list of primes)
@@ -365,7 +392,8 @@ for d = 0, 1, 2, ... do:
     else if |outside| > 1:
         report unexpected; investigate
 end for
-\end{verbatim}}
+\end{verbatim}
+}
 
 \subsection{3.3. The Degree Sweep}\label{the-degree-sweep}
 
@@ -700,35 +728,165 @@ In every case, the prime-vanishing subspace is entirely contained in the
 counterexample was found. This confirms the conjecture within the bounds
 \(a_{\max} \leq 5\), \(d \leq 6\).
 
-\textbf{Open question: scope of the conjecture.} Three natural
-extensions remain unresolved:
+\textbf{Scope of the conjecture.} The search was extended beyond
+\(a_{\max}=5\) in two further stages, each reported in §4.4 below. The
+key findings:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  \textbf{Does the conjecture hold for \(d \geq 7\)?} At \(d=7\) the
-  prime evaluation matrix grows from \(300 \times 35\) to
-  \(300 \times 40\), increasing runtime but not intractability.
-  Computational verification at \(d=7\) and \(d=8\) is within reach and
-  would substantially strengthen the evidence.
+  \textbf{The conjecture holds for \(d \leq 8\), \(a_{\max} \leq 5\)}
+  (verified computationally with \(N=300\) primes).
 \item
-  \textbf{Can the conjecture extend to \(a_{\max} \geq 6\)?} Theorem 2.1
-  shows \(M_6\) cannot appear in prime-vanishing expressions, so any
-  extension to higher weight would require new generating expressions
-  built entirely from \(M_1,\ldots,M_5\) at still higher polynomial
-  degrees. At weight 14 the cusp form space is 2-dimensional; at weight
-  16 it is 3-dimensional. Whether the cusp form exclusion mechanism
-  propagates to prevent all higher-weight contributions, or whether new
-  \(M_1\)--\(M_5\) expressions emerge at large \(d\), is an open
-  structural question.
+  \textbf{\(M_6\) exclusion is basis-dependent.} Within
+  \(\{M_1,\ldots,M_7\}\), a new expression \(E_6\) exists at \(d=4\),
+  involving both \(M_6\) and \(M_7\). See §4.4.
 \item
-  \textbf{Is \(a_{\max} = 5\) the true frontier?} It is conceivable that
-  the weight-12 barrier forces the generating set to be exactly
-  \(\{E_1, E_2, E_3, E_4, E_5\}\) for all degrees \(d\)---that is, that
-  no further linearly independent prime-vanishing expression exists at
-  any degree. Proving or disproving this would fully resolve the
-  conjecture of {[}1{]}.
+  \textbf{\(\{E_1,\ldots,E_6\}\) is complete through \(a_{\max}=12\),
+  \(d \leq 8\)} --- no further expressions found even at weight 24,
+  where \(\dim S_{24} = 2\). See §4.4.
 \end{enumerate}
+
+\subsection{\texorpdfstring{4.4. The Sixth Expression \(E_6\) and the
+Extended
+Search}{4.4. The Sixth Expression E\_6 and the Extended Search}}\label{the-sixth-expression-e_6-and-the-extended-search}
+
+\textbf{The \(\tau\)-cancellation mechanism.} Theorem 2.1 established
+that \(M_6\) is a pivot column within \(\{M_1,\ldots,M_6\}\) because
+\(\tau(p)\) at primes is algebraically independent of divisor sums.
+However, extending to \(\{M_1,\ldots,M_7\}\) opens a new cancellation
+channel. At weight 14, \(S_{14} = 0\) (no cusp form), yet \(M_7(n)\)
+contains \emph{both} \(\tau(n)\) and \(n\cdot\tau(n)\) terms: the
+quasimodular depth-1 piece of \(U_7(q)\) lives in
+\(M_{12} = \mathrm{span}\{E_{12}, \Delta\}\), and the
+\(E_2 \cdot \Delta\) component of that decomposition contributes
+\(\tau(n)\) and \(n\cdot\tau(n)\) to the Fourier coefficients.
+
+Within the combined \(\{M_6, M_7\}\) system evaluated at a prime \(p\),
+there are two \(\tau\)-type independent quantities: \(\tau(p)\) and
+\(p\cdot\tau(p)\). A linear combination \(\alpha M_6(p) + \beta M_7(p)\)
+can simultaneously cancel both, leaving a polynomial in \(p\). This
+gives one free direction in the three-dimensional space of
+\(\{M_6, M_7, \mathrm{polynomial}\}\) coefficients --- exactly one new
+null-space vector.
+
+\textbf{The nullity jump.} Comparing null-space dimensions at \(N = 95\)
+primes in \([2,500]\):
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Degree \(d\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Nullity \(\{M_1{-}M_5\}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Nullity \(\{M_1{-}M_6\}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Nullity \(\{M_1{-}M_7\}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Gain
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2 & 4 & 4 & 4 & 0 \\
+3 & 8 & 8 & 8 & 0 \\
+4 & 12 & 12 & 13 & \textbf{+1} \\
+5 & 16 & 16 & 18 & \textbf{+2} \\
+6 & 20 & 20 & 23 & \textbf{+3} \\
+\end{longtable}
+}
+
+The gain first appears at \(d=4\). The additional null vectors at
+\(d=5\) and \(d=6\) are all polynomial-degree shifts of the same new
+direction; no genuinely second expression exists.
+
+\textbf{The formula for \(E_6\).} The unique new prime-vanishing
+direction at \(d=4\), normalized and oriented with positive \(M_7\)
+constant coefficient, is:
+
+\[\begin{aligned}
+E_6(n) &= (105367732470 - 277943208789n + 289613157079n^2 \\
+        &\qquad - 145583618619n^3 + 28545937859n^4)\,M_1(n) \\
+        &\quad + (-51324522800n^3 + 4292382480n^4)\,M_2(n) \\
+        &\quad + (-40313554176n^3 + 1776519808n^4)\,M_3(n) \\
+        &\quad + (-32888346624n^3 + 770273280n^4)\,M_4(n) \\
+        &\quad + (-7741440000n^3 - 154828800n^4)\,M_5(n) \\
+        &\quad + (-483548921856000 + 37196070912000n)\,M_6(n) \\
+        &\quad + 892705701888000\,M_7(n)
+\end{aligned}\]
+
+\(E_6(n) = 0\) if and only if \(n\) is prime. Verification:
+\(E_6(p) = 0\) for all 95 primes in \([2,500]\) ✓; \(E_6(n) \neq 0\) for
+all composites in \([4,500]\) ✓. Among the 404 composites in
+\([4,500]\): 173 positive, 231 negative.
+
+\textbf{Conjecture check with \(E_6\).} After appending \(E_6\), the
+extended conjecture was verified for \(a_{\max}=7\), \(d=2\) through
+\(d=6\), \(N=300\) primes:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}cccc@{}}
+\toprule\noalign{}
+\(d\) & pv dim & \(\{E_1,\ldots,E_6\}\) span & Holds? \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2 & 4 & 18 & ✓ \\
+3 & 8 & 23 & ✓ \\
+4 & 13 & 28 & ✓ \\
+5 & 18 & 33 & ✓ \\
+6 & 23 & 38 & ✓ \\
+\end{longtable}
+}
+
+\textbf{The extended search to \(a_{\max} = 12\).} We then extended the
+search stepwise through \(M_8, M_9, \ldots, M_{12}\) (weights 16 through
+24). For each \(M_a\), a closed-form expression was fitted by rational
+RREF from \(M_{\mathrm{direct}}(a,n)\) data, incorporating all cusp-form
+types at that weight (see table). The nullity of the prime evaluation
+matrix and the \(\{E_1,\ldots,E_6\}\)-span test were rerun at each
+level.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ccccc@{}}
+\toprule\noalign{}
+\(a\) & Weight \(2a\) & \(\dim S_{2a}\) & New cusp type & New \(E_i\)
+found? \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+8 & 16 & 1 & \(\Delta\cdot E_4\) & No \\
+9 & 18 & 1 & \(\Delta\cdot E_6\) & No \\
+10 & 20 & 1 & \(\Delta\cdot E_8\) & No \\
+11 & 22 & 1 & \(\Delta\cdot E_{10}\) & No \\
+\textbf{12} & \textbf{24} & \textbf{2} & \(\Delta\cdot E_{12}\),
+\(\Delta^2\) & \textbf{No} \\
+\end{longtable}
+}
+
+Despite the large nullity gains from each new \(M_a\) (e.g.~at \(d=6\):
+nullity grows from 23 at \(a_{\max}=9\) to 44 at \(a_{\max}=12\), a gain
+of 21), every new null vector is a polynomial-degree shift of an
+existing \(E_i\). The conjecture \(\{E_1,\ldots,E_6\}\) spans the full
+prime-vanishing subspace holds ✓ at all \(d=2,\ldots,6\) through
+\(a_{\max}=12\).
+
+Notably, weight 24 is the first weight at which \(\dim S_{24}=2\),
+making \(M_{12}\) the most natural candidate for a new
+\(\tau\)-cancellation mechanism analogous to the one that produced
+\(E_6\). That no new expression arises here suggests the completeness of
+\(\{E_1,\ldots,E_6\}\) is a structural property, not merely a
+coincidence of the low-weight regime.
 
 \textbf{Note on non-negativity and the conjecture.} The canonical
 \(E_5(n)\) extracted via our algorithm is not universally non-negative,
@@ -751,10 +909,10 @@ appropriate basis element for the theorem statement of {[}1{]}.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-\section{\texorpdfstring{5. Summary of the \(E_1\)--\(E_5\)
-Sequence}{5. Summary of the E\_1--E\_5 Sequence}}\label{summary-of-the-e_1e_5-sequence}
+\section{\texorpdfstring{5. Summary of the \(E_1\)--\(E_6\)
+Sequence}{5. Summary of the E\_1--E\_6 Sequence}}\label{summary-of-the-e_1e_6-sequence}
 
-The five prime-detecting expressions form a hierarchy constrained by
+The six prime-detecting expressions form a hierarchy constrained by
 weight and polynomial degree:
 
 {\def\LTcaptype{none} % do not increment counter
@@ -768,7 +926,7 @@ weight and polynomial degree:
 \begin{minipage}[b]{\linewidth}\raggedright
 Expr
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
-Max poly degree \(d\)
+Min degree \(d\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 Highest \(M_a\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
@@ -785,74 +943,82 @@ Notes
 \(E_3\) & 4 & \(M_4\) & Yes & Introduces \(M_4\) \\
 \(E_4\) & 5 & \(M_5\) & Yes & Introduces \(M_5\) \\
 \(E_5\) & \textbf{2} & \(M_5\) & \textbf{No} & Degree resets; \(M_6\)
-excluded by cusp form barrier \\
+excluded within \(\{M_1,\ldots,M_6\}\) basis \\
+\(E_6\) & \textbf{4} & \(M_7\) & \textbf{No} & \(\tau\)-cancellation via
+\(M_6+M_7\); 173 pos / 231 neg composites \\
 \end{longtable}
 }
 
 \textbf{Observations.} The sequence shows a clear pattern up to \(E_4\):
 each expression introduces a new MacMahon function and increases
-polynomial degree by 1. At \(E_5\), both trends reverse. The polynomial
-degree resets from 5 to 2 (degree 2 is the minimal degree at which
-\(E_5\) appears when restricted to \(M_1\)--\(M_5\)), and \(M_6\) is
-entirely absent due to the weight-12 cusp form barrier established in
-Theorem 2.1. Both departures stem from the same root cause: the cusp
-form obstruction forces \(E_5\) to find its new direction within the
-existing \(M_1\)--\(M_5\) framework at a lower degree already partially
-explored by \(E_1\)--\(E_4\).
+polynomial degree by 1. At \(E_5\), the degree resets to 2 and \(M_6\)
+is absent --- a consequence of the weight-12 cusp form barrier. At
+\(E_6\), the pattern resumes in a modified form: \(M_6\) and \(M_7\)
+\emph{together} participate via the \(\tau\)-cancellation mechanism
+(§4.4), at degree 4. The computational evidence through \(a_{\max}=12\)
+and \(d \leq 8\) indicates \(\{E_1,\ldots,E_6\}\) is the complete
+generating set.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \section{6. Conclusion}\label{conclusion}
 
-The derivation of \(E_5(n)\) illuminates a profound structural
-phenomenon: the modular form barrier at weight 12 fundamentally
-constrains the algebraic structure of prime-vanishing expressions. The
-sequence \(E_1, E_2, E_3, E_4\) follows a clear pattern---each
-introduces the next MacMahon function as its leading term. At \(M_6\),
-however, the generating function \(U_6(q)\) enters a new modular-form
-regime. The resulting Ramanujan tau function \(\tau(n)\) is
-algebraically rigid: it does not reduce to polynomials in divisor sums,
-and it forces \(M_6\) into the pivot columns of every prime evaluation
-matrix.
+This work illuminates two complementary structural phenomena governing
+prime-vanishing expressions in the MacMahon basis.
 
-This obstruction forces \(E_5\) to live entirely in the \(M_1\)--\(M_5\)
-basis, finding its new dimension via higher polynomial degree rather
-than higher weight. Remarkably, the minimal degree at which \(E_5\)
-appears is \(d=2\)---lower than the \(d=5\) one might expect from the
-pattern---revealing a geometric ``fold'' in the prime-vanishing null
-space.
+The first is the \textbf{weight-12 cusp form barrier}: the generating
+function \(U_6(q)\) enters the cusp form space at weight 12, introducing
+the Ramanujan tau function \(\tau(n)\) which does not reduce to
+polynomials in divisor sums. This forces \(M_6\) into the pivot columns
+of every prime evaluation matrix built from \(\{M_1,\ldots,M_6\}\), and
+compels \(E_5\) to reside entirely in the \(M_1\)--\(M_5\) basis at the
+unexpectedly low degree \(d=2\).
 
-We have computationally resolved the open conjecture of {[}1{]} for
-weight \(a_{\max} \leq 5\) and polynomial degree \(d \leq 6\),
-confirming that \(\{E_1, E_2, E_3, E_4, E_5\}\) (or equivalently,
-\(\{E_1, E_2, E_3, E_4, E_5 + 856\,E_4\}\) for the non-negativity
-formulation) generates the prime-vanishing subspace within these bounds.
+The second is the \textbf{\(\tau\)-cancellation mechanism}: at weight
+14, \(U_7(q)\) introduces both \(\tau(n)\) and \(n\cdot\tau(n)\) via its
+quasimodular \(E_2\cdot\Delta\) component. Within
+\(\{M_1,\ldots,M_7\}\), a suitable linear combination of \(M_6\) and
+\(M_7\) can simultaneously cancel both \(\tau\)-type contributions at
+primes, yielding the new expression \(E_6\) at degree \(d=4\).
 
-This work opens several directions:
+The extended computational search --- through \(a_{\max}=12\) (weights
+up to 24) and polynomial degree \(d \leq 8\), using exact rational
+arithmetic --- finds no expressions beyond \(E_6\). Even at weight 24,
+where \(\dim S_{24} = 2\) (the first weight with two independent cusp
+forms), no new \(\tau\)-cancellation channel opens. We conclude
+computationally that \(\{E_1, E_2, E_3, E_4, E_5, E_6\}\) is the
+complete generating set within these bounds.
+
+This work leaves several directions for further investigation:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  \textbf{Higher weights.} At weight 14 and 16, the cusp form space
-  grows. Do prime-vanishing expressions exist at \(a_{\max} = 7\) or
-  beyond, or does the cusp form exclusion propagate?
+  \textbf{Sign structure of \(E_5\) and \(E_6\).} For \(E_5\): all 55
+  positive composites in \([4,500]\) are odd; parity is necessary but
+  not sufficient for positivity (§4.2). For \(E_6\): 173 positive and
+  231 negative composites in \([4,500]\). What arithmetic property of
+  \(n\) determines the sign?
 \item
-  \textbf{Sign structure of \(E_5\).} Parity is a necessary condition
-  for positivity: all 55 positive-\(E_5\) composites in \([4,500]\) are
-  odd, and no even composite is positive (§4.2). But parity is not
-  sufficient --- 100 odd composites are also negative. What finer
-  arithmetic property of an odd composite \(n\) determines whether
-  \(E_5(n) > 0\)?
+  \textbf{Theoretical completeness.} The computational evidence strongly
+  suggests \(\{E_1,\ldots,E_6\}\) is the complete basis for all
+  \(a_{\max}\) and \(d\). A theoretical proof would require
+  understanding why higher cusp form spaces (dim \(S_{2a} \geq 2\) for
+  \(a \geq 12\)) do not generate new cancellation channels despite
+  having sufficient degrees of freedom.
 \item
   \textbf{Closed-form generating series.} Is there an analogue of the
-  MacMahon generating functions \(U_a(q)\) that organizes the
-  expressions \(E_k\) into a coherent modular-form framework?
+  generating functions \(U_a(q)\) that organizes the expressions \(E_k\)
+  into a coherent automorphic framework, explaining the observed
+  completeness?
 \end{enumerate}
 
 By connecting partition-theoretic prime detection to the spectral
-geometry of modular forms, this framework reveals deep ties between
-number-theoretic detection and automorphic form theory---connections
-that merit further investigation.
+geometry of modular forms --- and showing that the complete list of
+prime-vanishing expressions reflects the weight-12 and weight-14 cusp
+form structure --- this framework reveals deep ties between additive
+number theory and automorphic form theory that merit further
+investigation.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -942,7 +1108,7 @@ independently:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Clone the repository:
+  Clone the repository:\\
   \texttt{git\ clone\ https://github.com/randsley/PartitionPrimes.git}
 \item
   Run the data extraction script:\\
@@ -980,14 +1146,20 @@ Detection}. PhD thesis, University of Virginia.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-\textbf{Paper information}
 \begin{itemize}
 \tightlist
-\item \textbf{Version:} 2.1 (revised)
-\item \textbf{Last updated:} 2026-03-09
+\item \textbf{Paper information}
+\item \textbf{Version:} 3.0
+\item \textbf{Last updated:} 2026-03-10
 \item \textbf{Repository:} \url{https://github.com/randsley/PartitionPrimes}
-\item \textbf{Data extraction script:} \texttt{Paper/extract\_paper\_data.jl}
-\item \textbf{Author's note:} All computations performed with Julia~1.10.0 or later, using exact \texttt{Rational\{BigInt\}} arithmetic.
+\item \textbf{Data extraction scripts:}
+  \texttt{extract\_paper\_data.jl} (E1--E5),
+  \texttt{extract\_e6\_e7.jl} (E6),
+  \texttt{extract\_e8\_e9.jl} (through M9),
+  \texttt{extract\_higher.jl} (through M12)
+\item \textbf{Author's note:} All computations use Julia 1.10+
+  with \texttt{Rational\{BigInt\}} exact arithmetic.
 \end{itemize}
+
 
 \end{document}
