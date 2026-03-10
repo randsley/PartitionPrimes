@@ -97,7 +97,7 @@ Adding the 3 columns $\{M_6, n M_6, n^2 M_6\}$ increases the rank by exactly 3 a
 
 #### 3.1. The Search Space
 
-Having established that $M_6(n)$ cannot appear in any prime-vanishing expression, we search for $E_5$ within the basis:
+Having established that $M_6(n)$ cannot appear in any prime-vanishing expression formed within the basis $\{M_1,\ldots,M_6\}$ (Corollary 2.2), we search for $E_5$ within that basis:
 
 $$\mathcal{B}_d = \{ n^k M_a(n) : 0 \leq k \leq d,\; 1 \leq a \leq 5 \}$$
 
