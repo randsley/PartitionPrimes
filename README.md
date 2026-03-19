@@ -1,5 +1,7 @@
 # PartitionPrimes
 
+[![DOI](https://zenodo.org/badge/1175396956.svg)](https://doi.org/10.5281/zenodo.19118619)
+
 Julia implementation of the quasi-shuffle algebra for partition-theoretic prime detection, based on:
 
 > **"Integer Partitions Detect the Primes"**
