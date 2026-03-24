@@ -1,0 +1,187 @@
+% appendix-computations.tex
+% Shared computational appendix for Paper 1 and Paper 2.
+% Include with: \input{appendix-computations}
+
+\section*{Appendix: Computational Data}
+\addcontentsline{toc}{section}{Appendix: Computational Data}
+\label{app:computations}
+
+All computations were performed in exact rational arithmetic.
+Prime evaluation matrices were built from the first $N$ primes and reduced via
+rational row-reduction (RREF over $\Q$).
+The source code is available at the project repository.
+
+% ------------------------------------------------------------------
+\subsection*{A.1\quad Closed Form of $M_6$}
+\label{app:M6-formula}
+
+Fitting the $55\times 22$ rational linear system
+(21 polynomial-weighted divisor-sum columns plus one $\tau$-column)
+yields the exact formula
+\[
+  M_6(n) = \sum_{j=0}^{5} P_j(n)\,\sigma_{2j+1}(n)
+            - \frac{17}{150\,450\,048\,000}\,\tau(n),
+\]
+with explicit polynomials $P_j\in\Q[n]$:
+\begin{align*}
+P_0(n)&=\frac{550499}{4541644800}-\frac{153617}{371589120}\,n+\frac{2159}{6635520}\,n^2-\frac{67}{737280}\,n^3+\frac{11}{1105920}\,n^4-\frac{1}{2764800}\,n^5\\[4pt]
+P_1(n)&=\frac{153617}{743178240}-\frac{2159}{8847360}\,n+\frac{67}{819200}\,n^2-\frac{11}{1105920}\,n^3+\frac{1}{2580480}\,n^4\\[4pt]
+P_2(n)&=\frac{2159}{88473600}-\frac{67}{4915200}\,n+\frac{11}{5160960}\,n^2-\frac{1}{10321920}\,n^3\\[4pt]
+P_3(n)&=\frac{67}{123863040}-\frac{11}{74317824}\,n+\frac{1}{111476736}\,n^2\\[4pt]
+P_4(n)&=\frac{11}{3715891200}-\frac{1}{3096576000}\,n\\[4pt]
+P_5(n)&=\frac{1}{268995133440}
+\end{align*}
+These 22 coefficients were verified against direct partition enumeration for
+$n=1,\ldots,30$ with no mismatches (see repository script
+\texttt{Paper/compute\_m6\_coefficients.jl}).
+The key datum is the $\tau$-coefficient
+\[
+  c_\tau = -\frac{17}{150\,450\,048\,000},
+  \qquad
+  150\,450\,048\,000 = 2^{10}\times 3^5\times 5^3\times 7\times 691.
+\]
+The denominator prime $691 = \mathrm{num}(B_{12})$ is the Bernoulli prime
+indexing the weight-12 Eisenstein series.
+
+% ------------------------------------------------------------------
+\subsection*{A.2\quad Cusp Structure of $M_7$ and Value of $\beta$}
+\label{app:M7-formula}
+
+Despite $\dim S_{14}(\SL_2(\Z))=0$, the closed form of $M_7(n)$ involves
+$n\cdot\tau(n)$.
+This follows from the quasimodular decomposition of $U_7(q)$: the depth-1 component
+lies in $E_2\cdot M_{12}$, and the identity $D\Delta = E_2\Delta$ (proved from Ramanujan's differential equations
+in the companion paper) shows that
+$[q^n](E_2\Delta)=n\cdot\tau(n)$ exactly.
+There is no independent $\tau(n)$ term: the $\tau(p)$ direction in $\mathcal{O}_d$
+comes entirely from $M_6$ (via $c_\tau\ne 0$).
+
+The exact closed form is
+\[
+  M_7(n) = \sum_{j=0}^{6} Q_j(n)\,\sigma_{2j+1}(n) + \beta\,n\cdot\tau(n),
+\]
+with $\beta\ne 0$.
+The exact rational value of $\beta$ is the coefficient of $E_2\Delta$ in the
+quasimodular decomposition of $U_7$, computed in exact arithmetic by the repository
+script \texttt{Paper/extract\_e6\_e7.jl} (function \texttt{\_fit\_m7!}, column~30
+of the augmented RREF system) and verified against direct partition enumeration for
+$n=1,\dots,30$.
+
+The structural significance is:
+\begin{itemize}
+  \item $\beta\ne 0$: $M_7$ contributes $p\cdot\tau(p)$ at primes, a direction absent
+        from $M_6$ alone (which contributes only $\tau(p)$).
+\end{itemize}
+Together, the $\{M_6,M_7\}$ sub-system at primes carries both independent cusp
+directions $\tau(p)$ and $p\cdot\tau(p)$, which is the source of the
+cusp-cancellation mechanism underlying $E_6$.
+
+% ------------------------------------------------------------------
+\subsection*{A.3\quad Prime Evaluation Rank Data}
+\label{app:rank-data}
+
+\begin{table}[H]
+\centering
+\caption{Rank and nullity of prime evaluation matrices at $N=95$ primes,
+         showing the pivot status of $M_6$ within the restricted basis.}
+\label{tab:app-pivot}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Matrix & Rows & Cols & Rank & Nullity \\
+\midrule
+$a_{\max}=5,\;d=2$ & 95 & 15 & 11 & 4 \\
+$a_{\max}=6,\;d=2$ & 95 & 18 & 14 & 4 \\
+$a_{\max}=5,\;d=3$ & 95 & 20 & 12 & 8 \\
+$a_{\max}=6,\;d=3$ & 95 & 24 & 16 & 8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In each case the nullity does not increase when $M_6$ is adjoined,
+confirming that all $M_6$-columns are pivot columns.
+
+% ------------------------------------------------------------------
+\subsection*{A.4\quad Nullity Gains When $M_7$ Is Adjoined}
+\label{app:nullity-m7}
+
+\begin{table}[H]
+\centering
+\caption{Nullity comparison at $N=95$ primes.
+         The gain first appears at $d=4$.}
+\label{tab:app-nullity-m7}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$d$ & Nullity $\{M_1\text{--}M_5\}$ &
+      Nullity $\{M_1\text{--}M_6\}$ &
+      Nullity $\{M_1\text{--}M_7\}$ & Gain \\
+\midrule
+2 & 4  & 4  & 4  & 0 \\
+3 & 8  & 8  & 8  & 0 \\
+4 & 12 & 12 & 13 & $+1$ \\
+5 & 16 & 16 & 18 & $+2$ \\
+6 & 20 & 20 & 23 & $+3$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------
+\subsection*{A.5\quad Explicit Formula for $E_5$}
+\label{app:E5-formula}
+
+After normalization to primitive integer coefficients,
+the unique new prime-vanishing direction at degree~2 in the basis
+$\{M_1,\dots,M_5\}$ is
+\begin{align*}
+E_5(n) ={}
+  & (-450450+675675n-225225n^2)\,M_1(n) \\
+  &+(960960n-120120n^2)\,M_2(n) \\
+  &+(2534912n-166016n^2)\,M_3(n) \\
+  &+(7999488n-322560n^2)\,M_4(n) \\
+  &+258048000\,M_5(n).
+\end{align*}
+The constant $M_5$-coefficient is
+$258048000 = 2^{11}\times 3^2\times 5^3\times 7\times 127$.
+
+% ------------------------------------------------------------------
+\subsection*{A.6\quad Explicit Formula for $E_6$}
+\label{app:E6-formula}
+
+The unique new prime-vanishing direction at degree~4 in the basis
+$\{M_1,\dots,M_7\}$, normalized analogously, is
+\begin{align*}
+E_6(n) ={}
+  &(105367732470 - 277943208789n + 289613157079n^2 \\
+  &\quad{}-145583618619n^3+28545937859n^4)\,M_1(n)\\
+  &+(-51324522800n^3+4292382480n^4)\,M_2(n)\\
+  &+(-40313554176n^3+1776519808n^4)\,M_3(n)\\
+  &+(-32888346624n^3+770273280n^4)\,M_4(n)\\
+  &+(-7741440000n^3-154828800n^4)\,M_5(n)\\
+  &+(-483548921856000+37196070912000n)\,M_6(n)\\
+  &+892705701888000\,M_7(n).
+\end{align*}
+The leading $M_7$-coefficient is
+$892705701888000 = 2^{10}\times 3^5\times 5^3\times 7\times 691\times 1303$.
+The factor $691$ connects $E_6$ arithmetically to the weight-12 modular structure of
+$M_6$.
+
+% ------------------------------------------------------------------
+\subsection*{A.7\quad Extended Search to $a_{\max}=12$}
+\label{app:extended-search}
+
+\begin{table}[H]
+\centering
+\caption{Extended search to $a_{\max}=12$.
+         No independent $E_i$ was found beyond $E_6$.}
+\label{tab:app-extended}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$a$ & Weight $2a$ & $\dim S_{2a}$ & New cusp type & New $E_i$ found? \\
+\midrule
+8  & 16 & 1 & $\Delta\cdot E_4$              & No \\
+9  & 18 & 1 & $\Delta\cdot E_6$              & No \\
+10 & 20 & 1 & $\Delta\cdot E_8$              & No \\
+11 & 22 & 1 & $\Delta\cdot E_{10}$           & No \\
+12 & 24 & 2 & $\Delta\cdot E_{12},\;\Delta^2$ & No \\
+\bottomrule
+\end{tabular}
+\end{table}

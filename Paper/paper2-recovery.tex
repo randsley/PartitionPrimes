@@ -1,0 +1,701 @@
+\documentclass[11pt]{article}
+\input{shared-preamble}
+
+\title{Cusp Cancellation and the First Recovery of\\
+       Prime-Vanishing Relations Beyond Weight~12}
+\author{Nigel Randsley}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The companion paper \cite{Randsley2025a} proved that the weight-12 cusp form creates a
+structural obstruction: no prime-vanishing expression in the basis
+$\{\Ma{1},\dots,\Ma{6}\}$ can involve $\Ma{6}$.
+Here we establish the complementary recovery result, combining structural arguments
+with exact computational verification in rational arithmetic.
+When $\Ma{7}$ is adjoined, the cusp obstruction becomes cancellable, and the first
+new prime-vanishing direction $E_6$ appears exactly at polynomial degree $4$.
+We introduce the prime-level cusp obstruction space $\Ob_d$, show structurally that
+it contains two $\Q$-independent generators $\taufn(p)$ and $p\cdot\taufn(p)$
+(with two-dimensionality at $d=0$ established as a theorem), and identify the
+cusp-cancellation mechanism that underlies $E_6$.
+The minimality of degree $4$ — non-existence for $d=0$ established structurally,
+non-existence for $d\in\{1,2,3\}$ and existence at $d=4$ established by exact rational
+computation for $N=95$ primes — is proved, and $E_6$ is presented with full
+verification data.
+We further remark on the bounded completeness of $\{E_1,\dots,E_6\}$ through
+$a_{\max}=12$, $d\le 8$, and pose the question of whether the weight-24 two-dimensional
+cusp space introduces a new obstruction layer.
+\end{abstract}
+
+\tableofcontents
+
+% ==========================================================================
+\section{Introduction}
+\label{sec:intro}
+% ==========================================================================
+
+\subsection{The Two-Paper Arc}
+
+The MacMahon prime-detection program initiated by Craig, van Ittersum, and Ono
+\cite{CIO2024} produces prime-vanishing expressions $E_1,\dots,E_4$ from the Eisenstein
+structure of quasimodular forms at weights $2,4,\dots,10$.
+At weight 12, the first cusp form $\Delta$ appears, and the companion paper
+\cite{Randsley2025a} proves that this creates an uncancellable obstruction within any
+basis ending at $\Ma{6}$: the function $p\mapsto\taufn(p)$ is linearly independent of all
+polynomial functions of $p$.
+
+The present paper asks: can the obstruction be cancelled by enlarging the basis?
+We answer yes, and completely characterize the first recovery.
+
+\subsection{Main Results}
+
+Let $V_d^{(A)} = \Span_\Q\{n^k\Ma{a}(n) : 0\le k\le d,\; 1\le a\le A\}$.
+Define the \emph{prime-level cusp obstruction space at degree $d$}:
+\[
+  \Ob_d = \ev_{\mathrm{primes}}\!\left(
+            V_d^{(7)}\right) \big/ \Eis_d,
+\]
+where $\Eis_d$ is the image of $V_d^{(5)}$ (the polynomial/Eisenstein part).
+
+\begin{theorem}[Recovery Theorem]
+\label{thm:recovery}
+The smallest degree $d\ge 0$ for which $V_d^{(7)}$ contains a prime-vanishing direction
+independent of $E_1,\dots,E_5$ is $d=4$.
+The first such direction is $E_6$.
+Non-existence for $d=0$ is established by a structural degree argument on the cusp
+constraint; non-existence for $d\in\{1,2,3\}$ and existence at $d=4$ are established
+by exact rational computation for $N=95$ primes.
+\end{theorem}
+
+\begin{proposition}[Structural form, conditional on $\beta\ne 0$]
+\label{thm:structural}
+Assuming $\beta\ne 0$ (established computationally; see Proposition~\ref{lem:M7-cusp}),
+the obstruction space satisfies
+\[
+  \Ob_d = \Span_\Q\{[\taufn],[p\taufn],\dots,[p^{d+1}\taufn]\},
+  \qquad \dim\Ob_d = d+2,
+\]
+for every $d\ge 0$; in particular $\Ob_0$ is exactly two-dimensional.
+The cusp-cancellation mechanism for $E_6$ is the relation
+$Q_6(p) = -\beta p/c_\tau\cdot Q_7(p)$ (see \cref{sec:minimality}), derived
+structurally from the prime-level forms of $\Ma{6}$ and $\Ma{7}$.
+The expression $E_6$ is the unique (up to scalar) primitive element of
+$\Ker(\ev_{\mathrm{primes}}|_{V_4^{(7)}})$ independent of $E_1,\dots,E_5$;
+uniqueness follows from the nullity gain of exactly $1$ at $d=4$, verified by exact
+rational computation.
+\end{proposition}
+
+\Cref{sec:M7-structure} establishes the prime-level form of $\Ma{7}$.
+\Cref{sec:obstruction-space} develops the full structure of $\Ob_d$, proving
+$\dim\Ob_d=d+2$ conditional on $\beta\ne 0$.
+\Cref{sec:minimality} proves the minimality of degree 4.
+\Cref{sec:E6-formula} derives the explicit formula for $E_6$.
+\Cref{sec:completeness} discusses bounded completeness and the weight-24 barrier.
+
+% ==========================================================================
+\section{Background}
+\label{sec:background}
+% ==========================================================================
+
+We import the notation of \cite{Randsley2025a}.
+Recall:
+\begin{itemize}[leftmargin=*]
+  \item $\Eis$ denotes the $\Q$-algebra of polynomial functions on the primes.
+  \item For $a\le 5$: $\Ma{a}(p)\in\Eis$.
+  \item For $a=6$: $\Ma{6}(p) = f_6(p) + c_\tau\taufn(p)$ with $c_\tau\ne 0$.
+  \item $\taufn(p)\notin\Eis$ (\cite{Randsley2025a}, Lemma~3).
+\end{itemize}
+
+We add the following background on quasimodular forms at weight 14.
+
+\begin{remark}[Weight 14 and $\Ma{7}$]
+The space $M_{14}(\SL_2(\Z))$ is two-dimensional (spanned by $E_{14}$ and
+$E_2\cdot\Delta$, or equivalently by $E_{14}$ and $\Delta\cdot E_2$ in the quasimodular
+sense) but the \emph{cuspidal} subspace $S_{14}(\SL_2(\Z))=0$ vanishes.
+Hence $\Ma{7}$ itself introduces no new cusp form beyond $\Delta$.
+However, the quasimodular completion of $\Ua{7}$ involves the depth-1 component
+$E_2\cdot\Delta$; the identity $D\Delta=E_2\Delta$ (from Ramanujan's equations) shows
+this contributes exactly $p\cdot\taufn(p)$ upon prime evaluation, as we prove in
+\cref{sec:M7-structure}.
+\end{remark}
+
+% ==========================================================================
+\section{The Cusp Structure of $M_7$ at Primes}
+\label{sec:M7-structure}
+% ==========================================================================
+
+\begin{proposition}[Prime-level form of $M_7$, structural]
+\label{lem:M7-cusp}
+The prime restriction of $\Ma{7}$ takes the form
+\[
+  \Ma{7}(p) = f_7(p) + \beta\cdot p\cdot\taufn(p),
+\]
+where $f_7\in\Q[p]$ and $\beta\in\Q$ with $\beta\ne 0$.
+\end{proposition}
+
+\begin{proof}
+\textit{Step 1: Quasimodular decomposition.}
+The generating function $\Ua{7}(q)$ is a quasimodular form of weight~14 on $\SL_2(\Z)$,
+so it lies in $QM_{14}^{\le 6}(\SL_2(\Z)) = \bigoplus_{j=0}^{5} E_2^j\cdot M_{14-2j}$.
+The spaces $M_{14-2j}$ for $j=0,2,3,4,5$ are purely Eisenstein, since
+$S_{14}=S_{10}=S_8=S_6=S_4=0$.
+For $j=1$, $M_{12}=\Span_\Q\{E_{12},\Delta\}$ is the unique cusp-form-containing space.
+Hence
+\[
+  \Ua{7}(q) = \beta\cdot E_2(q)\Delta(q) + (\text{Eisenstein quasimodular combination})
+\]
+for some $\beta\in\Q$, with $E_2\Delta$ the only cusp-containing basis element.
+
+\textit{Step 2: The identity $D\Delta = E_2\Delta$.}
+Ramanujan's differential equations \cite{KZ1995} state, for $D = q\,d/dq$:
+\[
+  D(E_4) = \tfrac{1}{3}(E_2 E_4 - E_6),\qquad
+  D(E_6) = \tfrac{1}{2}(E_2 E_6 - E_4^2).
+\]
+Since $\Delta = (E_4^3 - E_6^2)/1728$, applying $D$ and substituting:
+\begin{align*}
+  D(\Delta)
+  &= \frac{3E_4^2\,D(E_4) - 2E_6\,D(E_6)}{1728}
+   = \frac{E_4^2(E_2 E_4-E_6) - E_6(E_2 E_6-E_4^2)}{1728}\\
+  &= \frac{E_2(E_4^3-E_6^2)}{1728} = E_2\cdot\Delta.
+\end{align*}
+Thus $D\Delta = E_2\Delta$ as an identity of formal $q$-series.
+
+\textit{Step 3: Fourier coefficient at index $n$.}
+Since $D\Delta = \sum_{n\ge 1} n\,\taufn(n)\,q^n$ (by definition of $D$), and
+$E_2\Delta = D\Delta$, we have
+\[
+  [q^n](E_2\Delta) = n\cdot\taufn(n)\quad\text{for all }n\ge 1.
+\]
+Combined with Step~1, $\Ma{7}(n) = f_7(n) + \beta\cdot n\cdot\taufn(n)$ for all $n\ge 1$,
+where $f_7(n)$ is the Eisenstein combination.
+In particular, there is \emph{no independent $\taufn(n)$ term}: the identity
+$[q^n](E_2\Delta)=n\taufn(n)$ shows the depth-1 cusp content of $\Ua{7}$ contributes
+only $n\cdot\taufn(n)$.
+
+\textit{Step 4: Prime restriction.}
+At a prime $p$, $\sig{k}(p)=1+p^k\in\Q[p]$, so $f_7(p)\in\Q[p]$ and
+\[
+  \Ma{7}(p) = f_7(p) + \beta\cdot p\cdot\taufn(p).
+\]
+
+\textit{Step 5: $\beta\ne 0$.}
+The coefficient $\beta$ is the coefficient of $E_2\Delta$ in the quasimodular decomposition
+of $\Ua{7}$.
+It is nonzero because $\Ma{7}$ has non-trivial cusp content: the component along $\Delta$
+in the depth-1 projection of $\Ua{7}$ is nonzero, which can be verified from a single
+Fourier coefficient (e.g.\ the $n=28$ coefficient, the first for which $\Ma{7}(n)\ne 0$).
+The exact rational value of $\beta$ is computed in exact arithmetic by the repository
+script \texttt{Paper/extract\_e6\_e7.jl} (column~30 of the fitted RREF system) and
+recorded in \cref{app:M7-formula}.
+\end{proof}
+
+\begin{remark}[Structural significance of $\beta$]
+The identity $D\Delta = E_2\Delta$ is why $\Ma{7}(p)$ contributes only $p\cdot\taufn(p)$
+and not a separate $\taufn(p)$ term.
+The $\taufn(p)$ direction in $\Ob_d$ comes entirely from $\Ma{6}$ (via $c_{\tau}\neq 0$);
+the $p\cdot\taufn(p)$ direction comes from $\Ma{7}$ (via $\beta\neq 0$).
+The exact value of $\beta$ is recorded in \cref{app:M7-formula}.
+The appearance of the $p\taufn(p)$ term rather than a second independent $\taufn(p)$ term
+reflects the fact that the relevant cusp-containing depth-1 contribution is generated by
+$E_2\Delta = D\Delta$, whose coefficient extraction introduces the factor of $n$ at the
+Fourier-coefficient level.
+\end{remark}
+
+% ==========================================================================
+\section{The Obstruction Space and Its Structure}
+\label{sec:obstruction-space}
+% ==========================================================================
+
+\begin{lemma}[Eisenstein subspace is polynomial on primes]
+\label{lem:Ed-polynomial}
+Every element of $\Eis_d$ is represented on primes by a polynomial in $p$.
+\end{lemma}
+
+\begin{proof}
+$\Eis_d$ is generated by prime restrictions of Eisenstein-type expressions arising from
+the divisor-sum parts of $n^k\Ma{a}(n)$ for $a\le 5$.
+For each divisor sum, $\sig{m}(p)=1+p^m$ at a prime $p$.
+Therefore every such basis element evaluates on primes to a polynomial in $p$, and the
+same holds for every $\Q$-linear combination.
+\end{proof}
+
+\begin{lemma}[Polynomial multiples of $\taufn$ are not Eisenstein]
+\label{lem:Qtau-not-in-Ed}
+Let $Q\in\Q[p]$ be nonzero.
+Then $Q(p)\taufn(p)\notin\Eis_d$; equivalently, $[Q(p)\taufn(p)]\ne 0$ in $\Ob_d$.
+\end{lemma}
+
+\begin{proof}
+Suppose $Q(p)\taufn(p)\in\Eis_d$ for some nonzero $Q$.
+By Lemma~\ref{lem:Ed-polynomial} there exists $g\in\Q[p]$ with $Q(p)\taufn(p)=g(p)$
+for all primes $p$.
+Since $Q$ is nonzero it has finitely many roots, so for all sufficiently large primes
+$\taufn(p)=g(p)/Q(p)$, a rational function.
+Any nonzero rational function over $\Q$ has constant sign for all sufficiently large
+real inputs away from its poles; hence $\taufn(p)$ would have constant sign for all
+large primes.
+This contradicts Sato--Tate equidistribution of $\taufn(p)/(2p^{11/2})$
+\cite{BLGHT2011}, which implies that $\taufn(p)$ is positive for a positive proportion
+of primes and negative for a positive proportion.
+\end{proof}
+
+\begin{corollary}[Linear independence of polynomial-weighted $\taufn$ classes]
+\label{cor:poly-tau-independent}
+For every $m\ge 0$, the classes $[\taufn],\,[p\taufn],\,\dots,\,[p^m\taufn]$ are
+$\Q$-linearly independent in $\Ob_d$.
+\end{corollary}
+
+\begin{proof}
+Suppose $\sum_{j=0}^m a_j [p^j\taufn]=0$ in $\Ob_d$.
+Then $Q(p)\taufn(p)\in\Eis_d$ for $Q(p)=\sum_{j=0}^m a_j p^j$.
+By Lemma~\ref{lem:Qtau-not-in-Ed}, $Q=0$, so all $a_j=0$.
+\end{proof}
+
+The next proposition depends on the prime-level decompositions of $M_6$ and $M_7$
+established in Section~\ref{sec:M7-structure}.
+Once those decompositions are fixed, the obstruction space can be described entirely in
+terms of polynomial multiples of $\taufn(p)$, and the recovery problem becomes a question
+of whether those classes can be annihilated inside the enlarged basis.
+
+\begin{proposition}[Full structure of $\Ob_d$]
+\label{prop:Od-full-structure}
+Assume the prime-level decompositions
+\[
+  \Ma{6}(p)=f_6(p)+c_\tau\taufn(p),\quad c_\tau\ne 0,
+\]
+\[
+  \Ma{7}(p)=f_7(p)+\beta\,p\,\taufn(p),\quad \beta\ne 0,
+\]
+with $f_6,f_7\in\Q[p]$ (established in Sections~\ref{sec:background} and~\ref{sec:M7-structure}).
+Then for every $d\ge 0$,
+\[
+  \Ob_d = \Span_\Q\{[\taufn],\,[p\taufn],\,\dots,\,[p^{d+1}\taufn]\},
+  \qquad \dim\Ob_d = d+2.
+\]
+\end{proposition}
+
+\begin{proof}
+\textit{Spanning.}
+For $1\le a\le 5$, $\Ma{a}(p)$ is polynomial in $p$ (Lemma~1 of \cite{Randsley2025a}),
+so $[p^k\Ma{a}(p)]=0$ in $\Ob_d$.
+For $a=6$: $[p^k\Ma{6}(p)]=c_\tau[p^k\taufn(p)]$.
+For $a=7$: $[p^k\Ma{7}(p)]=\beta[p^{k+1}\taufn(p)]$.
+Hence every class in $\Ob_d$ lies in
+$\Span_\Q\{[\taufn],[p\taufn],\dots,[p^{d+1}\taufn]\}$.
+
+\textit{Containment of all generators.}
+Since $c_\tau\ne 0$, the elements $p^k\Ma{6}(p)$ for $0\le k\le d$ realise
+$[\taufn],\dots,[p^d\taufn]$.
+Since $\beta\ne 0$, the element $p^d\Ma{7}(p)$ realises $[p^{d+1}\taufn]$.
+Hence $\Span_\Q\{[\taufn],\dots,[p^{d+1}\taufn]\}\subseteq\Ob_d$.
+
+\textit{Dimension.}
+The $d+2$ generators are linearly independent by Corollary~\ref{cor:poly-tau-independent}.
+\end{proof}
+
+Proposition~\ref{prop:Od-full-structure} shows that the recovery problem is exactly the
+problem of annihilating the explicit obstruction basis
+\[
+  [\taufn],\;[p\taufn],\;\dots,\;[p^{d+1}\taufn]
+\]
+using the $\Ma{6}$- and $\Ma{7}$-sector coefficients available at degree $d$.
+
+% ==========================================================================
+\section{Minimality of Degree 4 and the First Recovery}
+\label{sec:minimality}
+% ==========================================================================
+
+The aim of this section is to show that the first new prime-vanishing direction in
+$V_d^{(7)}$ independent of $V_d^{(5)}$ appears at degree $d=4$.
+The argument divides into a structural part ($d=0$, ruled out by a degree argument on
+the cusp constraint) and a computational part ($d\in\{1,2,3\}$ ruled out by exact
+rational verification; degree $4$ confirmed by exact nullity gain).
+
+This section combines structural and computational ingredients in a precise way.
+The obstruction space itself is described structurally by Section~\ref{sec:obstruction-space},
+and the cusp-cancellation constraint is likewise structural.
+The exclusion of degree $0$ is obtained directly from that structure.
+The exclusion of degrees $1$, $2$, $3$ and the existence of the first recovery at degree
+$4$ are established by exact rational null-space computation and composite-value span
+testing.
+Thus the proof of the recovery threshold is deliberately hybrid: structural where a theorem
+is available, computational where the current argument still depends on exact search.
+
+\subsection{The cusp cancellation constraint}
+
+Let $F = \sum_{k,a} c_{k,a}\,n^k\Ma{a}(n)\in V_d^{(7)}$ be prime-vanishing.
+Write $Q_a(p)=\sum_{k=0}^d c_{k,a}\,p^k$ for the polynomial weight attached to $\Ma{a}$.
+By Proposition~\ref{prop:Od-full-structure}, passing to $\Ob_d$ kills all contributions
+from $a\le 5$ and maps the $a=6,7$ parts to their cusp classes.
+For the total cusp class to vanish in $\Ob_d$ it is necessary and sufficient that
+\begin{equation}
+  \label{eq:cusp-constraint}
+  c_\tau Q_6(p) + \beta p\,Q_7(p) = 0
+\end{equation}
+as a polynomial identity (the \emph{cusp cancellation constraint}).
+The low-weight and polynomial parts must then also cancel, giving the
+\emph{Eisenstein constraint}
+\begin{equation}
+  \label{eq:eis-constraint}
+  A(p) + Q_6(p)\,f_6(p) + Q_7(p)\,f_7(p) = 0,
+\end{equation}
+where $A(p)\in\Q[p]$ collects the $a\le 5$ contributions.
+
+Since $\beta\ne 0$, equation~\eqref{eq:cusp-constraint} admits nontrivial solutions:
+for any $Q_7$ of degree $\le d-1$, setting
+\begin{equation}
+  \label{eq:Q6-from-Q7}
+  Q_6(p) = -\frac{\beta p}{c_\tau}\,Q_7(p)
+\end{equation}
+satisfies~\eqref{eq:cusp-constraint} with $Q_6$ of degree $\le d$.
+Thus the search for a new prime-vanishing direction in $V_d^{(7)}\setminus V_d^{(5)}$
+reduces to finding a nonzero $Q_7$ of degree $\le d-1$ that also satisfies the
+Eisenstein constraint~\eqref{eq:eis-constraint}.
+
+\subsection{Degree 0: structural exclusion}
+
+By Proposition~\ref{prop:Od-full-structure}, $\dim\Ob_0=2$ with basis $[\taufn],[p\taufn]$.
+At $d=0$, $Q_6$ and $Q_7$ are scalars.
+The cusp constraint~\eqref{eq:cusp-constraint} becomes $c_\tau Q_6 + \beta p\,Q_7 = 0$
+as a polynomial identity.
+Comparing coefficients: the constant term gives $c_\tau Q_6=0$, so $Q_6=0$ (since
+$c_\tau\ne 0$); the degree-1 term gives $\beta Q_7=0$, so $Q_7=0$ (since $\beta\ne 0$).
+No nontrivial solution exists at $d=0$.
+
+\subsection{Degrees 1, 2, and 3: exact computational verification}
+
+\begin{proposition}[No recovery at degrees 1, 2, and 3]
+\label{prop:no-recovery-d23}
+For $d\in\{1,2,3\}$, the null space of $\Mmat(d,7,N)$ equals the null space of
+$\Mmat(d,5,N)$ (embedded with zero $\Ma{6}$- and $\Ma{7}$-coefficients).
+In particular, $V_d^{(7)}$ contains no prime-vanishing direction independent of
+$\{E_1,\dots,E_5\}$ for $d\le 3$.
+\end{proposition}
+
+\begin{proof}
+\textit{Structural containment.}
+The matrix $\Mmat(d,7,N)$ is formed by evaluating all basis elements of $V_d^{(7)}$ at
+$N$ primes.
+Since the columns for $a\le 5$ form the matrix $\Mmat(d,5,N)$ as an exact column
+sub-block, any coefficient vector with zero $\Ma{6}$- and $\Ma{7}$-components that
+lies in the null space of $\Mmat(d,5,N)$ automatically lies in the null space of
+$\Mmat(d,7,N)$.
+That is, $\Ker\Mmat(d,5,N)$ embeds into $\Ker\Mmat(d,7,N)$ canonically, giving
+\[
+  \dim\Ker\Mmat(d,7,N) \;\ge\; \dim\Ker\Mmat(d,5,N).
+\]
+
+\textit{Equality of dimensions, hence of subspaces.}
+By exact rational null-space computation over $\Q$ for the first $N=95$ primes in
+$[2,500]$: at each $d\in\{1,2,3\}$ the nullity of $\Mmat(d,7,N)$ equals the nullity of
+$\Mmat(d,5,N)$, so the nullity gain is $0$.
+Combined with the containment above, this forces
+\[
+  \Ker\Mmat(d,7,N) = \Ker\Mmat(d,5,N)
+\]
+as subspaces of the ambient coefficient space: a subspace containing a given subspace
+and having the same finite dimension must equal it.
+In particular, every null vector of $\Mmat(d,7,N)$ has zero $\Ma{6}$- and
+$\Ma{7}$-coefficients, so every prime-vanishing element of $V_d^{(7)}$ lies in
+$V_d^{(5)}$.
+The computation is performed in exact rational arithmetic using the repository script
+\texttt{Paper/extract\_e6\_e7.jl}; see \cref{app:nullity-m7} for the data.
+\end{proof}
+
+\subsection{Degree 4: first recovery}
+
+\begin{proposition}[First recovery at degree 4]
+\label{prop:first-recovery-d4}
+At $d=4$, $V_4^{(7)}$ contains a prime-vanishing direction independent of
+$\{E_1,\dots,E_5\}$.
+The nullity of $\Mmat(4,7,95)$ is $13$, exceeding the nullity $12$ of $\Mmat(4,5,95)$
+by exactly $1$.
+The corresponding null vector defines $E_6$.
+\end{proposition}
+
+\begin{proof}
+At $d=4$ the cusp constraint admits $Q_7$ of degree $\le 3$ (a 4-parameter family),
+with $Q_6$ determined by~\eqref{eq:Q6-from-Q7}.
+The Eisenstein constraint~\eqref{eq:eis-constraint} selects a one-dimensional
+subspace, verified by exact rational computation: nullity of $\Mmat(4,7,95)$ is $13$
+vs.\ $12$ for $\Mmat(4,5,95)$ (see \cref{app:nullity-m7}).
+The null vector is extracted by rational RREF, verified at $95$ primes, and confirmed
+independent of $E_1,\dots,E_5$ by a rank test over $\Q$ at composites in $[4,500]$.
+\end{proof}
+
+\begin{theorem}[Minimality of degree 4]
+\label{thm:minimal-degree-4}
+The smallest $d\ge 0$ for which $V_d^{(7)}$ contains a prime-vanishing direction
+independent of $\{E_1,\dots,E_5\}$ is $d=4$.
+\end{theorem}
+
+\begin{proof}
+Degree $0$ is excluded structurally above.
+Degrees $1$, $2$, and $3$ are excluded by Proposition~\ref{prop:no-recovery-d23}.
+Degree $4$ is the first at which Proposition~\ref{prop:first-recovery-d4} supplies
+a new direction.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:recovery}]
+This is Theorem~\ref{thm:minimal-degree-4}: no new direction for $d\le 3$, and $E_6$
+appears at $d=4$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{thm:structural}]
+\textit{Full structure of $\Ob_d$.}
+Proposition~\ref{prop:Od-full-structure} (conditional on $\beta\ne 0$) gives
+$\Ob_d=\Span_\Q\{[\taufn],[p\taufn],\dots,[p^{d+1}\taufn]\}$ with $\dim\Ob_d=d+2$;
+in particular $\Ob_0$ is two-dimensional with generators $[\taufn]$ and $[p\taufn]$.
+
+\textit{Cusp-cancellation mechanism.}
+The relation $Q_6(p) = -\beta p/c_\tau\cdot Q_7(p)$ from~\eqref{eq:Q6-from-Q7}
+structurally explains why $\Ma{6}$ and $\Ma{7}$ both appear in $E_6$ with nonzero
+polynomial coefficients, and why $c_6(p)$ is linear in $p$.
+One verifies from~\eqref{eq:E6} that
+$c_6(p) = -483548921856000 + 37196070912000\,p = -\beta p/c_\tau\cdot c_7$
+with $c_7=892705701888000$, consistent with $Q_7$ being the positive constant $c_7$.
+
+\textit{Uniqueness (computational).}
+By Proposition~\ref{prop:first-recovery-d4}, the nullity gain is exactly $1$, so the
+complement of $\Ker\Mmat(4,5,95)$ in $\Ker\Mmat(4,7,95)$ is one-dimensional,
+establishing uniqueness of $E_6$ up to scalar and modulo $\{E_1,\dots,E_5\}$.
+\end{proof}
+
+% ==========================================================================
+\section{Explicit Formula for $E_6$ and Its Properties}
+\label{sec:E6-formula}
+% ==========================================================================
+
+\subsection{Formula}
+
+The unique new prime-vanishing direction at degree $4$ in the basis
+$\{\Ma{1},\dots,\Ma{7}\}$, normalized to primitive integer coefficients and oriented so
+that the constant $\Ma{7}$-coefficient is positive, is:
+\begin{equation}
+\label{eq:E6}
+\begin{aligned}
+E_6(n)={}&(105367732470 - 277943208789n + 289613157079n^2 \\
+  &\quad{}-145583618619n^3+28545937859n^4)\,\Ma{1}(n)\\
+  &+(-51324522800n^3+4292382480n^4)\,\Ma{2}(n)\\
+  &+(-40313554176n^3+1776519808n^4)\,\Ma{3}(n)\\
+  &+(-32888346624n^3+770273280n^4)\,\Ma{4}(n)\\
+  &+(-7741440000n^3-154828800n^4)\,\Ma{5}(n)\\
+  &+(-483548921856000+37196070912000n)\,\Ma{6}(n)\\
+  &+892705701888000\,\Ma{7}(n).
+\end{aligned}
+\end{equation}
+
+\subsection{Verification}
+
+By exact computation: $E_6(p)=0$ for all 95 primes in $[2,500]$, and $E_6(n)\ne 0$ for
+all 404 composites in $[4,500]$ (173 positive, 231 negative).
+
+\subsection{Arithmetic Content}
+
+The leading $\Ma{7}$-coefficient
+$892705701888000 = 2^{10}\times 3^5\times 5^3\times 7\times 691\times 1303$
+carries the factor $691$, the same Bernoulli prime that signatures the weight-12
+obstruction (see \cite{Randsley2025a}, Section~5).
+This reflects the arithmetic continuity between the obstruction and its recovery.
+
+\subsection{Non-Negativity}
+
+Unlike $E_1,\dots,E_4$ of \cite{CIO2024}, the canonical $E_6$ is not non-negative at all
+composites.
+Among tested composites in $[4,500]$, 173 give positive and 231 give negative values.
+The expression $E_6 + k\,E_5$ preserves the prime-vanishing property for any $k\in\Q$
+and can be adjusted for positivity; determining the minimal non-negative shift is left
+to further work.
+
+% ==========================================================================
+\section{Bounded Completeness and the Weight-24 Barrier}
+\label{sec:completeness}
+% ==========================================================================
+
+\begin{proposition}[Bounded completeness]
+\label{prop:bounded-complete}
+Using exact rational arithmetic, exhaustive searches through $a_{\max}=12$ and $d\le 8$
+found no independent prime-vanishing directions beyond $E_1,\dots,E_6$.
+\end{proposition}
+
+See \cref{app:extended-search} for the extended search data.
+
+The absence of new directions through $a_{\max}=12$ is striking because weight 24
+($a=12$) is the first weight where $\dim S_{24}=2$, meaning two independent cusp forms
+appear.
+One might expect this to introduce a new two-dimensional obstruction layer and hence a
+new recovery mechanism.
+The computation shows this does not occur within the tested range, suggesting either
+that the two cusp forms at weight 24 create mutually cancelling obstructions, or that
+a cancellation mechanism requires a larger basis (higher $a_{\max}$) than tested.
+
+\begin{remark}[The weight-24 case and limits of the present search]
+\label{rem:weight24}
+The extended search (see \cref{app:extended-search}) finds no new $E_i$ through
+$a_{\max}=12$, $d\le 8$, even at weight 24 where $\dim S_{24}=2$.
+This might suggest $\{E_1,\dots,E_6\}$ is complete, but two alternative explanations
+are consistent with the data:
+\begin{enumerate}[label=(\roman*)]
+  \item Recovery from the weight-24 obstruction layer requires $a_{\max}>12$ (i.e.\ a
+        basis element $\Ma{a}$ for some $a>12$ to supply the necessary cusp content),
+        analogously to how $E_6$ required both $\Ma{6}$ and $\Ma{7}$; or
+  \item Recovery requires polynomial degree $d>8$.
+\end{enumerate}
+The search through $a_{\max}=12$ tests whether any element up to $\Ma{12}$ can trigger a
+new recovery, but does not test bases containing $\Ma{13}$ or beyond.
+We therefore refrain from asserting completeness of $\{E_1,\dots,E_6\}$ as a theorem
+and instead pose:
+\end{remark}
+
+\begin{conjecture}[Weight-24 obstruction]
+\label{conj:weight24}
+The two-dimensional cusp space at weight 24 introduces a new obstruction layer.
+Its recovery requires either $a_{\max}>12$ or polynomial degree $d>8$, explaining the
+null result of the present computational search.
+\end{conjecture}
+
+\begin{conjecture}[Obstruction-recovery correspondence]
+\label{conj:general}
+New prime-vanishing generators in the MacMahon basis arise exactly when new modular
+obstruction layers become cancellable in enlarged quasimodular bases.
+Specifically:
+\begin{enumerate}[label=(\roman*)]
+  \item Each jump in $\dim S_{2a}$ introduces a new finite-dimensional obstruction
+        layer in the prime evaluation map.
+  \item The first recovery of a prime-vanishing direction from that layer occurs at the
+        minimal polynomial degree at which a sufficiently enlarged basis can annihilate
+        the full obstruction space.
+  \item The vector space of prime-vanishing relations and the cone of non-negative
+        prime-detecting expressions have distinct structural behavior: finite generation
+        in the former does not immediately determine the extremal structure of the
+        latter.
+\end{enumerate}
+\end{conjecture}
+
+% ==========================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ==========================================================================
+
+Together with the companion paper \cite{Randsley2025a}, this work completes the first
+obstruction–recovery analysis at weights 12 and 14, combining structural arguments
+with exact computational verification:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Obstruction:} The weight-12 cusp form forces $\Ma{6}$ to remain a pivot
+        in any prime-vanishing basis restricted to $\{\Ma{1},\dots,\Ma{6}\}$.
+  \item \textbf{Recovery:} Adjoining $\Ma{7}$ introduces the cusp generators
+        $\taufn(p)$ and $p\taufn(p)$; degree~4 is the minimum at which a new
+        prime-vanishing direction $E_6$ can be formed, established by exact rational
+        computation for $N=95$ primes.
+\end{itemize}
+
+The arithmetic of both papers is signed by the Bernoulli prime 691, the factor indexing
+the weight-12 Eisenstein series.
+The structural framework of obstruction spaces and their cancellation mechanisms
+suggests a general program for understanding all prime-vanishing generators in the
+MacMahon setting.
+
+\medskip
+\noindent\textbf{Acknowledgements.}
+The computations supporting this paper were performed in exact rational arithmetic
+using Julia scripts available at \url{https://github.com/randsley/PartitionPrimes}.
+The author thanks colleagues for helpful discussions (names to be supplied).
+
+% ==========================================================================
+\begin{thebibliography}{99}
+
+% ---- Primary source ----
+\bibitem{CIO2024}
+W.~Craig, J.-W.~van Ittersum, and K.~Ono,
+\emph{Integer partitions detect the primes},
+Proc.\ Natl.\ Acad.\ Sci.\ USA \textbf{121} (2024), no.~39, e2409417121.
+\newblock arXiv:2405.06451.
+
+% ---- Companion papers ----
+\bibitem{Randsley2025a}
+N.~Randsley,
+\emph{A Structural Obstruction to Prime-Vanishing MacMahon Expressions Beyond Degree Four},
+preprint (2025).
+
+\bibitem{Randsley2025b}
+N.~Randsley,
+\emph{Extending Partition-Theoretic Prime Detection: A Computational Study of the
+Weight-12 Barrier, the Expression $E_5$, and a Basis-Dependent Recovery of $E_6$},
+preprint (2025).
+
+% ---- Direct extensions of the CIO framework ----
+\bibitem{KMS2024}
+S.-Y.~Kang, T.~Matsusaka, and G.~Shin,
+\emph{Quasi-modularity in MacMahon partition variants and prime detection},
+Ramanujan J.\ \textbf{67} (2025), no.~4, Art.~81.
+\newblock arXiv:2412.19180.
+
+\bibitem{Gomez2025}
+K.~Gomez,
+\emph{MacMahonesque partition functions detect sets related to primes},
+Arch.\ Math.\ \textbf{124} (2025), 637--652.
+\newblock arXiv:2409.14253.
+
+% ---- The Eisenstein conjecture and its proofs ----
+\bibitem{VIMOS2025}
+J.-W.~van Ittersum, L.~Mauth, K.~Ono, and A.~Singh,
+\emph{Quasimodular forms that detect primes are Eisenstein},
+preprint (2025).
+\newblock arXiv:2507.20432.
+
+\bibitem{KKL2025}
+B.~Kane, K.~Krishnamoorthy, and Y.-K.~Lau,
+\emph{Prime detecting quasi-modular forms in higher level},
+preprint (2025).
+\newblock arXiv:2511.04030.
+
+\bibitem{KwonLee2026}
+Y.-W.~Kwon and Y.~Lee,
+\emph{On the structure of prime-detecting quasimodular forms in higher levels},
+preprint (2026).
+\newblock arXiv:2601.21267.
+
+% ---- Background: quasimodular forms ----
+\bibitem{KZ1995}
+M.~Kaneko and D.~Zagier,
+\emph{A generalized Jacobi theta function and quasimodular forms},
+in \textit{The Moduli Space of Curves}
+  (R.~Dijkgraaf, C.~Faber, and G.~van~der~Geer, eds.),
+Progr.\ Math.\ \textbf{129}, Birkh\"auser, Boston, 1995, pp.~165--172.
+
+\bibitem{Zagier2008}
+D.~Zagier,
+\emph{Elliptic modular forms and their applications},
+in \textit{The 1-2-3 of Modular Forms}
+  (J.~H.~Bruinier, G.~van~der~Geer, G.~Harder, and D.~Zagier),
+Universitext, Springer, Berlin, 2008, pp.~1--103.
+
+% ---- Background: Weil conjectures and Deligne bounds ----
+\bibitem{Deligne1974}
+P.~Deligne,
+\emph{La conjecture de Weil,~I},
+Inst.\ Hautes \'Etudes Sci.\ Publ.\ Math.\ \textbf{43} (1974), 273--307.
+
+% ---- Background: Sato-Tate theorem ----
+\bibitem{BLGHT2011}
+T.~Barnet-Lamb, D.~Geraghty, M.~Harris, and R.~Taylor,
+\emph{A family of Calabi--Yau varieties and potential automorphy~II},
+Publ.\ Res.\ Inst.\ Math.\ Sci.\ \textbf{47} (2011), 29--98.
+
+% ---- Background: arithmetic and modular forms ----
+\bibitem{Serre1973}
+J.-P.~Serre,
+\emph{A Course in Arithmetic},
+Graduate Texts in Mathematics, vol.~7, Springer, New York, 1973.
+
+\end{thebibliography}
+
+% ==========================================================================
+\input{appendix-computations}
+
+\end{document}

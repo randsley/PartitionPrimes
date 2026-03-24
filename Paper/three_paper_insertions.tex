@@ -1,0 +1,72 @@
+
+% =========================
+% Insertions for the three-paper package
+% =========================
+
+% -------------------------------------------------
+% 1) Computational paper — end of Introduction
+% -------------------------------------------------
+\paragraph{Position within the broader program.}
+The present paper should be read as the computational discovery paper in a broader three-part program. Its role is to identify, by exact rational search, the first post-$E_4$ phenomena: the weight-$12$ obstruction in the restricted $\{M_1,\dots,M_6\}$ basis, the unexpected appearance of $E_5$ in $\{M_1,\dots,M_5\}$, and the first recovery $E_6$ after adjoining $M_7$. Subsequent companion work proves the weight-$12$ obstruction structurally and then analyzes the first recovery mechanism through a combination of structural arguments and exact computational verification. In this sense, the present paper establishes the discovery layer, while the companion papers supply the first theorem-level explanation of the obstruction--recovery pattern.
+
+% -------------------------------------------------
+% 2) Computational paper — end of Conclusion
+% -------------------------------------------------
+The broader significance of these computations is that they isolate the first obstruction layer and the first recovery layer in partition-theoretic prime detection. In companion work, the weight-$12$ barrier is proved structurally, explaining why $M_6$ cannot contribute a new prime-vanishing direction in the restricted basis. A second companion paper then studies the first recovery after adjoining $M_7$, showing how the cusp sector re-enters through a cancellation mechanism that first becomes visible at degree $4$. The present paper therefore serves as the computational foundation for a structural obstruction--recovery theory.
+
+% -------------------------------------------------
+% 3) Computational paper — taxonomy summary table
+% -------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Three levels of structure in the present paper.}
+\label{tab:three-levels}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Object & Meaning & Role in this paper \\
+\midrule
+Prime-vanishing generator & Vanishes at the tested primes & Null-space direction, e.g.\ $E_5$ \\
+Non-negative prime-detecting expression & Vanishes only at primes and is non-negative on tested composites & Stronger detection object, recovered from generators by adjustment \\
+Structural obstruction/recovery phenomenon & Modular explanation of disappearance or reappearance of directions & Interprets the weight-$12$ barrier and the $M_7$-recovery \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% -------------------------------------------------
+% 4) Paper 1 — end of Introduction
+% -------------------------------------------------
+\paragraph{Proof roadmap.}
+The proof has a short and rigid structure. First, the lower MacMahon functions $M_1,\dots,M_5$ are shown to have polynomial prime restrictions, so the restricted prime-evaluation space is Eisenstein-type. Second, $M_6$ is written in the form
+\[
+M_6(p)=f(p)+c_\tau\tau(p),
+\]
+with $f\in\mathbb Q[p]$ and $c_\tau\neq 0$. Third, a non-cancellation lemma shows that no nonzero polynomial multiple of $\tau(p)$ can lie in the Eisenstein-type prime span. The obstruction theorem then follows by decomposing any candidate prime-vanishing relation into its polynomial part and its cusp part and observing that the latter cannot vanish unless the entire $M_6$-sector is zero.
+
+% -------------------------------------------------
+% 5) Paper 1 — fit clarification sentence
+% -------------------------------------------------
+The fitted formula is used here only as an exact coefficient identity: once the ansatz space is fixed and the corresponding rational system is shown to have full column rank, the recovered coefficients are uniquely determined and may be used in the subsequent proof without heuristic ambiguity.
+
+% -------------------------------------------------
+% 6) Paper 2 — before Proposition 4.4
+% -------------------------------------------------
+The next proposition depends on the prime-level decompositions of $M_6$ and $M_7$ established in Section~3. Once those decompositions are fixed, the obstruction space can be described entirely in terms of polynomial multiples of $\tau(p)$, and the recovery problem becomes a question of whether those classes can be annihilated inside the enlarged basis.
+
+% -------------------------------------------------
+% 7) Paper 2 — start of Section 5
+% -------------------------------------------------
+Section~5 combines structural and computational ingredients in a precise way. The obstruction space itself is described structurally by Section~4, and the cusp-cancellation constraint is likewise structural. The exclusion of degree $0$ is then obtained directly from that structure. The exclusion of degrees $1,2,3$ and the existence of the first recovery at degree $4$ are established by exact rational null-space computation and composite-value span testing. Thus the proof of the recovery threshold is deliberately hybrid: structural where a theorem is available, computational where the current argument still depends on exact search.
+
+% -------------------------------------------------
+% 8) Paper 2 — after Proposition 4.4
+% -------------------------------------------------
+Proposition~4.4 shows that the recovery problem is exactly the problem of annihilating the explicit obstruction basis
+\[
+[\tau],[p\tau],\dots,[p^{d+1}\tau]
+\]
+using the $M_6$- and $M_7$-sector coefficients available at degree $d$.
+
+% -------------------------------------------------
+% 9) Paper 2 — Section 3 clarifying sentence
+% -------------------------------------------------
+The appearance of the $p\tau(p)$ term rather than a second independent $\tau(p)$ term reflects the fact that the relevant cusp-containing depth-1 contribution is generated by $E_2\Delta=D\Delta$, whose coefficient extraction introduces the factor of $n$ at the Fourier-coefficient level.
