@@ -18,8 +18,9 @@ All arithmetic is exact (uses Int / Rational as appropriate).
 module PartitionPrimes
 
 export σ, M1, M2, M3, M_direct, M_macmahonesque
-export E1, E2, E3, E4, E5
-export is_prime_partition, verify_range
+export E1, E2, E3, E4, E5, E6
+export compare_expressions
+export is_prime_partition, verify_range, verify_nonnegativity
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 1.  Divisor power sums  σ_k(n) = Σ_{d | n} d^k
@@ -32,6 +33,7 @@ Sum of k-th powers of divisors of n.
 σ(1, n) is the ordinary sum-of-divisors; σ(0, n) counts divisors.
 """
 function σ(k::Int, n::Int)::Int
+    n < 1 && throw(ArgumentError("σ(k, n) requires n ≥ 1, got n = $n"))
     s = 0
     for d in 1:isqrt(n)
         if n % d == 0
@@ -234,6 +236,51 @@ function E4(n::Int)
            580608000 * m5
 end
 
+"""
+    E5(n) -> Rational
+
+Appendix A.5: unique new prime-vanishing direction at degree 2 in {M₁,…,M₅}.
+Normalized to primitive integer coefficients.
+Uses M_direct for M₄ and M₅ (slow for large n).
+"""
+function E5(n::Int)
+    m4 = M_direct(4, n)
+    m5 = M_direct(5, n)
+    bn = big(n)
+    return (
+        (-450450 + 675675*bn - 225225*bn^2) * M1(n)
+        + (960960*bn - 120120*bn^2) * M2(n)
+        + (2534912*bn - 166016*bn^2) * M3(n)
+        + (7999488*bn - 322560*bn^2) * m4
+        + 258048000 * m5
+    )
+end
+
+"""
+    E6(n) -> Rational
+
+Appendix A.6: unique new prime-vanishing direction at degree 4 in {M₁,…,M₇}.
+Normalized to primitive integer coefficients.
+Uses M_direct for M₄–M₇ (very slow for large n; practical for n ≤ ~50).
+"""
+function E6(n::Int)
+    m4 = M_direct(4, n)
+    m5 = M_direct(5, n)
+    m6 = M_direct(6, n)
+    m7 = M_direct(7, n)
+    bn = big(n)
+    return (
+        (105367732470 - 277943208789*bn + 289613157079*bn^2
+         - 145583618619*bn^3 + 28545937859*bn^4) * M1(n)
+        + (-51324522800*bn^3 + 4292382480*bn^4) * M2(n)
+        + (-40313554176*bn^3 + 1776519808*bn^4) * M3(n)
+        + (-32888346624*bn^3 + 770273280*bn^4) * m4
+        + (-7741440000*bn^3 - 154828800*bn^4) * m5
+        + (-483548921856000 + 37196070912000*bn) * m6
+        + 892705701888000 * m7
+    )
+end
+
 # ──────────────────────────────────────────────────────────────────────────────
 # 6.  Partition-theoretic primality test
 # ──────────────────────────────────────────────────────────────────────────────
@@ -244,7 +291,7 @@ end
 Returns true iff n is prime, using the partition-theoretic criterion of
 Theorem 1.1(1): n is prime ⟺ (n²-3n+2)·M₁(n) - 8·M₂(n) = 0.
 
-Valid for n ≥ 2 (returns false for n = 1).
+Valid for n ≥ 2 (returns false for n < 2, including n = 0 and n = 1).
 """
 function is_prime_partition(n::Int)::Bool
     n < 2 && return false
@@ -297,6 +344,43 @@ function verify_range(lo::Int, hi::Int; verbose::Bool = true)
 end
 
 """
+    verify_nonnegativity(lo, hi; expressions=[E1, E2, E3, E4], verbose=true)
+
+Verify that each E_i(n) ≥ 0 for all composite n in [lo, hi].
+Returns a Dict mapping expression names to lists of violating n values.
+"""
+function verify_nonnegativity(lo::Int, hi::Int;
+                               expressions::Vector = [E1, E2, E3, E4],
+                               verbose::Bool = true)
+    violations = Dict{String,Vector{Int}}()
+    names = [string(e) for e in expressions]
+    for (i, E) in enumerate(expressions)
+        violations[names[i]] = Int[]
+    end
+    composites = filter(n -> !is_prime_trial(n), lo:hi)
+    for n in composites
+        for (i, E) in enumerate(expressions)
+            val = E(n)
+            if val < 0
+                push!(violations[names[i]], n)
+            end
+        end
+    end
+    if verbose
+        all_ok = all(isempty, values(violations))
+        if all_ok
+            println("✓ Non-negativity verified for $(join(names, ", ")) ",
+                    "on $(length(composites)) composites in [$lo, $hi].")
+        else
+            for (name, vs) in violations
+                isempty(vs) || println("✗ $name is negative at: ", vs)
+            end
+        end
+    end
+    return violations
+end
+
+"""
     compare_expressions(n)
 
 Evaluate all implemented prime-detecting expressions at n and display results.
@@ -307,6 +391,7 @@ function compare_expressions(n::Int)
     println("  E1(n) = $(E1(n))")
     println("  E2(n) = $(E2(n))")
     println("  E3(n) = $(E3(n))")
+    println("  E4(n) = $(E4(n))")
     println()
     println("  Ratio E2/E1: ",
             iszero(E1(n)) ? "0/0 (both zero at primes)" : E2(n) // E1(n))
@@ -318,7 +403,9 @@ end  # module PartitionPrimes
 # Demo / quick-start
 # ──────────────────────────────────────────────────────────────────────────────
 
-using .PartitionPrimes
+import .PartitionPrimes: σ, M1, M2, M3, M_direct, M_macmahonesque,
+    E1, E2, E3, E4, E5, E6,
+    is_prime_partition, verify_range, verify_nonnegativity, compare_expressions
 
 println("=" ^ 60)
 println("Partition-theoretic prime detection")
@@ -327,7 +414,7 @@ println("=" ^ 60)
 
 println("\n── MacMahon function values ──")
 for n in [2, 3, 4, 5, 6, 7, 8, 10, 12, 13]
-    @printf "  n=%2d  M₁=%4d  M₂=%s  M₃=%s\n" n M1(n) M2(n) M3(n)
+    println("  n=$(lpad(n,2))  M₁=$(lpad(M1(n),4))  M₂=$(M2(n))  M₃=$(M3(n))")
 end
 
 println("\n── Prime-detecting expression E1(n) ──")
@@ -335,7 +422,7 @@ println("  (should be 0 iff n is prime)")
 for n in 2:20
     val = E1(n)
     marker = iszero(val) ? "  ← PRIME" : ""
-    @printf "  n=%2d  E1=%s%s\n" n val marker
+    println("  n=$(lpad(n,2))  E1=$(val)$(marker)")
 end
 
 println("\n── Partition primality test vs trial division, n ∈ [2, 100] ──")
