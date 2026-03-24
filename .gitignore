@@ -1,4 +1,26 @@
+# macOS
 .DS_Store
+
+# Jupyter
 .ipynb_checkpoints/
+
+# Julia
+Manifest.toml
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.toc
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Claude Code
+.claude/
+
+# Compiled documents
 *.pdf
 *.docx

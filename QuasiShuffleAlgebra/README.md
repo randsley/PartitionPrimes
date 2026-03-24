@@ -14,7 +14,7 @@ combinations of MacMahon partition functions vanish. This package provides:
 - The quasi-shuffle algebra Z_q (formal multiplication of generating series)
 - The D operator (expressing n*M_a(n) as constant-coefficient combinations)
 - Symmetrisation for recovering quasimodular forms
-- Five prime-detecting expressions (E1--E5) from Theorem 1.1 and Table 1
+- Six prime-detecting expressions (E1--E6) from Theorem 1.1, Table 1, and computational extensions
 
 All arithmetic is exact, using `Rational{BigInt}` throughout the algebra layers.
 
@@ -399,7 +399,7 @@ test_conjecture(d::Int, a_max::Int; N::Int=300, verbose::Bool=true) -> NamedTupl
 
 Tests whether every prime-vanishing expression in the basis
 `{n^k · M_a(n) : 0 ≤ k ≤ d, 1 ≤ a ≤ a_max}` lies in the Q[n]-span of the
-Table 1 entries E1–E5. Returns a NamedTuple with fields:
+Table 1 entries E1–E6. Returns a NamedTuple with fields:
 `holds` (Bool), `dim_prime_vanishing`, `dim_table1_span`, and
 `counterexample` (a coefficient vector, or `nothing`).
 
@@ -426,13 +426,15 @@ E2(n::Int) -> Rational     # uses M_1, M_2, M_3
 E3(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4 (closed form)
 E4(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4, M_5 (closed forms)
 E5(n::Int) -> Rational     # uses M_1, M_2, M_3, M_4, M_5 (closed forms; derived computationally)
+E6(n::Int) -> Rational     # uses M_1, ..., M_7 (closed forms; derived via tau-cancellation)
 ```
 
-Prime-detecting expressions from Theorem 1.1 and Table 1. For n >= 2:
+Prime-detecting expressions from Theorem 1.1, Table 1, and computational extensions. For n >= 2:
 - E1–E4 satisfy E_i(n) >= 0 for all n, with E_i(n) = 0 iff n is prime
 - E5 vanishes precisely at primes but may be negative at some composites
+- E6 vanishes precisely at primes; requires M6 and M7 via tau-cancellation mechanism
 
-All five use fast closed-form MacMahon functions (no direct enumeration).
+All six use fast closed-form MacMahon functions (no direct enumeration).
 
 ```julia
 is_prime_partition(n::Int) -> Bool
@@ -479,7 +481,7 @@ QuasiShuffleAlgebra/
     macmahon.jl             # σ, ramanujan_tau, M1-M6, M_direct, M_macmahonesque
     d_operator.jl           # D operator via exact rational RREF over Q
     symmetrisation.jl       # Symmetrised series (Theorem 4.4)
-    prime_detection.jl      # E1-E5, is_prime_partition, verify_range
+    prime_detection.jl      # E1-E6, is_prime_partition, verify_range
     conjecture.jl           # Computational test of the open conjecture
   test/
     runtests.jl             # Test runner
@@ -631,7 +633,7 @@ This is a finite-dimensional linear algebra question for each fixed degree bound
 3. Checking whether every basis vector of that null space lies in the ℚ-span of
    Table 1 entries, using rational row reduction
 
-**Status:** Confirmed holds at `(d=3, a_max=5)` using E1–E5 (verified in the test suite).
+**Status:** Confirmed holds at `(d=3, a_max=5)` using E1–E6 (verified in the test suite).
 Larger ranges require E5 in the Table 1 span; without E5 there is always a counterexample
 at `a_max ≥ 5`. A counterexample that persists even with E5 would be a significant
 mathematical finding.
