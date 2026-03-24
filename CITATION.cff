@@ -29,7 +29,27 @@ references:
       - family-names: Ono
         given-names: Ken
     year: 2024
+    journal: "Proc. Natl. Acad. Sci. USA"
+    volume: 121
     url: "https://arxiv.org/abs/2405.06451"
     identifiers:
       - type: other
         value: "arXiv:2405.06451v2"
+  - type: article
+    title: "Extending Partition-Theoretic Prime Detection: A Computational Study of the Weight-12 Barrier, the Expression E5, and a Basis-Dependent Recovery of E6"
+    authors:
+      - family-names: Randsley
+        given-names: Nigel
+    year: 2025
+  - type: article
+    title: "The Weight-12 Cusp Obstruction in Partition-Theoretic Prime Detection"
+    authors:
+      - family-names: Randsley
+        given-names: Nigel
+    year: 2025
+  - type: article
+    title: "Cusp Cancellation and the First Recovery of Prime-Vanishing Relations Beyond Weight 12"
+    authors:
+      - family-names: Randsley
+        given-names: Nigel
+    year: 2025

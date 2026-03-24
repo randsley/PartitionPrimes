@@ -1,6 +1,7 @@
 # Papers
 
-LaTeX sources for the three-paper package on partition-theoretic prime detection.
+LaTeX sources for the three-paper package on partition-theoretic prime detection,
+extending the framework of Craig, van Ittersum & Ono (Proc. Natl. Acad. Sci. 2024).
 
 ## Papers
 

@@ -638,15 +638,25 @@ Larger ranges require E5 in the Table 1 span; without E5 there is always a count
 at `a_max ≥ 5`. A counterexample that persists even with E5 would be a significant
 mathematical finding.
 
-**Key computational discovery:** M₆ columns are always pivot columns in the prime
-evaluation matrix RREF — meaning no prime-vanishing expression at any tested `(d, a_max)`
-involves M₆. The E5 formula consequently involves only M₁–M₅, not following the pattern
-of E1–E4 each introducing the next MacMahon function.
+**Key computational discoveries:**
+- M₆ alone cannot participate in prime-vanishing expressions due to the weight-12 cusp
+  obstruction (Ramanujan τ-function and the Bernoulli prime 691). E5 consequently involves
+  only M₁–M₅, breaking the pattern of E1–E4 each introducing the next MacMahon function.
+- Adjoining M₇ enables tau-cancellation, recovering E6 at polynomial degree d=4 in
+  {M₁,...,M₇}. No further independent expressions were found through a_max=12 (weight 24).
 
 ## References
 
-- Craig, van Ittersum, Ono: [Integer Partitions Detect the Primes](https://arxiv.org/abs/2405.06451) (2024)
-- Bachmann, Kuhn: *The algebra of generating functions for multiple divisor sums and applications to multiple zeta values*. Ramanujan J. 40 (2016), no. 3, 605--648
-- Bachmann: [Lecture notes on multiple zeta values and modular forms](https://www.henrikbachmann.com/uploads/7/7/6/3/77634444/mzv_mf_2020_v_5_4.pdf)
+### Primary
+- Craig, W., van Ittersum, J.-W., & Ono, K.: [Integer Partitions Detect the Primes](https://arxiv.org/abs/2405.06451). Proc. Natl. Acad. Sci. USA **121** (2024)
+- Randsley, N.: *Extending Partition-Theoretic Prime Detection: A Computational Study of the Weight-12 Barrier, the Expression E5, and a Basis-Dependent Recovery of E6* (2025)
+- Randsley, N.: *The Weight-12 Cusp Obstruction in Partition-Theoretic Prime Detection* (2025)
+- Randsley, N.: *Cusp Cancellation and the First Recovery of Prime-Vanishing Relations Beyond Weight 12* (2025)
+
+### Background
+- Kaneko, M. & Zagier, D.: *A generalized Jacobi theta function and quasimodular forms*. The Moduli Space of Curves, Birkhäuser (1995)
+- Zagier, D.: *Elliptic modular forms and their applications*. The 1-2-3 of Modular Forms, Springer (2008)
+- Bachmann, H., Kuhn: *The algebra of generating functions for multiple divisor sums and applications to multiple zeta values*. Ramanujan J. 40 (2016), no. 3, 605--648
 - Andrews, Rose: *MacMahon's sum-of-divisors functions, Chebyshev polynomials, and quasi-modular forms*. J. Reine Angew. Math. 676 (2013), 97--103
-- Zagier: *The 1-2-3 of Modular Forms*. In: Bruinier et al., Universitext, Springer 2008
+- Kang, S.-Y., Matsusaka, T., & Shin, S.: *Quasi-modularity in MacMahon partition variants and prime detection*. Ramanujan J. **67** (2025)
+- van Ittersum, J.-W., Mauth, N., Ono, K., & Singh, A.: *Quasimodular forms that detect primes are Eisenstein* (preprint, 2025)

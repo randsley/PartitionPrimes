@@ -34,7 +34,7 @@
 ### Foundation
 - Implemented quasi-shuffle algebra Z_q with exact rational arithmetic
 - MacMahon functions M1-M3 (closed form) and M_direct (combinatorial)
-- Prime-detecting expressions E1-E4 from Craig-van Ittersum-Ono (2024)
+- Prime-detecting expressions E1-E4 from Craig, van Ittersum & Ono (Proc. Natl. Acad. Sci. 2024)
 - D operator, symmetrisation, diamond product
 - 906 tests covering all algebraic operations
 - Computational conjecture test framework

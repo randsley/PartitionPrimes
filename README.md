@@ -2,15 +2,15 @@
 
 [![DOI](https://zenodo.org/badge/1175396956.svg)](https://doi.org/10.5281/zenodo.19118619)
 
-Julia implementation of the quasi-shuffle algebra for partition-theoretic prime detection, based on:
+Julia implementation of partition-theoretic prime detection via the quasi-shuffle algebra,
+extending the framework of Craig, van Ittersum & Ono [1]. This repository implements six
+prime-detecting expressions $E_1$–$E_6$ built from MacMahon partition functions, where for
+$n \geq 2$: $E_i(n) = 0$ if and only if $n$ is prime — connecting additive number theory
+(partitions) to multiplicative number theory (primes) via quasimodular forms.
 
-> **"Integer Partitions Detect the Primes"**
-> William Craig, Jan-Willem van Ittersum & Ken Ono
-> [arXiv:2405.06451v2](https://arxiv.org/abs/2405.06451) (July 2024)
-
-The paper proves that for $n \geq 2$, certain non-negative expressions built from MacMahon
-partition functions vanish **if and only if $n$ is prime** — connecting additive number
-theory (partitions) to multiplicative number theory (primes) via quasimodular forms.
+The three companion papers [2, 3, 4] extend the original framework by deriving $E_5$ and $E_6$,
+establishing the weight-12 cusp obstruction, and proving that $E_6$ is recoverable via
+tau-cancellation between $M_6$ and $M_7$.
 
 ## Repository Layout
 
@@ -84,20 +84,24 @@ test_conjecture(3, 4; N=150, verbose=false)
 
 $$M_a(n) = \sum_{\substack{0 < s_1 < \cdots < s_a \\ m_i \geq 1,\; \sum m_i s_i = n}} m_1 m_2 \cdots m_a$$
 
-**Prime-detecting expressions** (Theorem 1.1, Table 1):
+**Prime-detecting expressions** (Theorem 1.1 of [1], extended in [2, 3, 4]):
 
-| Expression | Formula | Vanishes iff |
-|---|---|---|
-| $E_1(n)$ | $(n^2-3n+2)M_1 - 8M_2$ | $n$ is prime |
-| $E_2(n)$ | $(3n^3-13n^2+18n-8)M_1 + \cdots - 960M_3$ | $n$ is prime |
-| $E_3(n)$ | polynomial coefficients up to $M_4$ | $n$ is prime |
-| $E_4(n)$ | polynomial coefficients up to $M_5$ | $n$ is prime |
-| $E_5(n)$ | polynomial coefficients up to $M_5$ (derived computationally) | $n$ is prime |
+| Expression | Basis | Degree | Source | Non-negative? |
+|---|---|---|---|---|
+| $E_1(n)$ | $\{M_1\}$ | $d=1$ | CIO [1] | Yes |
+| $E_2(n)$ | $\{M_1, M_2\}$ | $d=2$ | CIO [1] | Yes |
+| $E_3(n)$ | $\{M_1, \ldots, M_3\}$ | $d=2$ | CIO [1] | Yes |
+| $E_4(n)$ | $\{M_1, \ldots, M_4\}$ | $d=3$ | CIO [1] | Yes |
+| $E_5(n)$ | $\{M_1, \ldots, M_5\}$ | $d=2$ | This work [2] | No (shifted by $+856 E_4$) |
+| $E_6(n)$ | $\{M_1, \ldots, M_7\}$ | $d=4$ | This work [3, 4] | No |
 
-**Open conjecture:** Any non-negative prime-vanishing expression in $\mathbb{Q}[n] \otimes \{M_a\}$
-is a $\mathbb{Q}[n]$-linear combination of Table 1 entries. Tested computationally in
-`src/conjecture.jl`; confirmed for polynomial degree $\leq 3$ and weight $\leq 5$ using $E_1$–$E_5$.
-See `Extend.md` for the derivation of $E_5$.
+All six vanish if and only if $n$ is prime for $n \geq 2$. Note that $E_5$ skips $M_6$
+due to the weight-12 cusp obstruction [3], and $E_6$ requires $M_7$ to cancel the
+Ramanujan $\tau$-function contribution from $M_6$ [4].
+
+**Bounded completeness:** No independent prime-vanishing expressions beyond $E_1$–$E_6$
+were found in an exhaustive search through $a_{\max} = 12$ (weight 24) and polynomial
+degree $d \leq 8$. See `Extend.md` and Paper 3 [2] for details.
 
 ## Implementation Notes
 
@@ -110,11 +114,32 @@ See `Extend.md` for the derivation of $E_5$.
 - The conjecture test checks the $\mathbb{Q}[n]$-span by including $n^j \cdot E_i(n)$ generators
   for $j = 0, \ldots, d$, evaluated directly rather than via truncated coefficient vectors.
 
-## Reference
+## References
 
-Craig, W., van Ittersum, J.-W., & Ono, K. (2024).
+[1] Craig, W., van Ittersum, J.-W., & Ono, K. (2024).
 *Integer Partitions Detect the Primes.*
+Proc. Natl. Acad. Sci. USA **121**, e2409816121.
 [arXiv:2405.06451v2](https://arxiv.org/abs/2405.06451)
+
+[2] Randsley, N. (2025).
+*Extending Partition-Theoretic Prime Detection: A Computational Study of the Weight-12
+Barrier, the Expression $E_5$, and a Basis-Dependent Recovery of $E_6$.*
+(Paper 3 — main computational paper)
+
+[3] Randsley, N. (2025).
+*The Weight-12 Cusp Obstruction in Partition-Theoretic Prime Detection.*
+(Paper 1 — obstruction theorem)
+
+[4] Randsley, N. (2025).
+*Cusp Cancellation and the First Recovery of Prime-Vanishing Relations Beyond Weight 12.*
+(Paper 2 — recovery of $E_6$)
+
+### Additional references
+
+- Kang, S.-Y., Matsusaka, T., & Shin, S. (2025). Quasi-modularity in MacMahon partition variants and prime detection. *Ramanujan J.* **67**, 12.
+- van Ittersum, J.-W., Mauth, N., Ono, K., & Singh, A. (2025). Quasimodular forms that detect primes are Eisenstein. Preprint.
+- Kaneko, M. & Zagier, D. (1995). A generalized Jacobi theta function and quasimodular forms. *The Moduli Space of Curves*, Birkhäuser.
+- Zagier, D. (2008). Elliptic modular forms and their applications. *The 1-2-3 of Modular Forms*, Springer.
 
 ## License
 

@@ -27,3 +27,10 @@ Each paper has a dedicated notebook that implements its key results with exact r
 - **E5_Exploration**: requires the `QuasiShuffleAlgebra` package (in repo)
 - **QuasiShuffleAlgebra_Guide**: requires the `QuasiShuffleAlgebra` package (in repo)
 - All notebooks require Julia 1.6+ and the `Plots` package
+
+## References
+
+- Craig, W., van Ittersum, J.-W., & Ono, K. (2024). *Integer Partitions Detect the Primes.* Proc. Natl. Acad. Sci. USA **121**.
+- Randsley, N. (2025). *Extending Partition-Theoretic Prime Detection* (Paper 3 — computational study).
+- Randsley, N. (2025). *The Weight-12 Cusp Obstruction* (Paper 1).
+- Randsley, N. (2025). *Cusp Cancellation and Recovery of E6* (Paper 2).
