@@ -15,24 +15,39 @@ theory (partitions) to multiplicative number theory (primes) via quasimodular fo
 ## Repository Layout
 
 ```
-QuasiShuffleAlgebra/        Julia package (the main implementation)
+partition_primes.jl         Standalone module: σ, M1–M3, E1–E6, primality test
+
+QuasiShuffleAlgebra/        Julia package (full implementation)
   src/
     QuasiShuffleAlgebra.jl  Module entry point
     util.jl                 Word, ZqElem types and helpers
     bernoulli.jl            Exact Bernoulli numbers (cached, Rational{BigInt})
     diamond.jl              Diamond product (eq. 4.3)
     quasishuffle.jl         Memoized quasi-shuffle product
-    macmahon.jl             σ, M1/M2/M3, M_direct, M_macmahonesque
+    macmahon.jl             σ, M1–M7, M_direct, M_macmahonesque
     d_operator.jl           D operator via exact RREF over Q
     symmetrisation.jl       Symmetrisation (Theorem 4.4)
-    prime_detection.jl      E1–E5, is_prime_partition, verify_range
+    prime_detection.jl      E1–E6, is_prime_partition, verify_range
     conjecture.jl           Computational test of the open conjecture
   test/                     906 tests, ~2 minutes
   examples/demo.jl          Annotated demo of every feature
 
-QuasiShuffleAlgebra_Guide.ipynb   Jupyter notebook guide (Julia kernel)
-PartitionPrimes_Tutorial.ipynb    Introductory tutorial notebook
-Extend.md                         Implementation notes and mathematical background
+notebooks/                  Jupyter notebooks (Julia kernel)
+  PartitionPrimes_Tutorial  Introductory tutorial (uses partition_primes.jl)
+  paper1_obstruction        Companion to Paper 1: Weight-12 Cusp Obstruction
+  paper2_recovery           Companion to Paper 2: Cusp Cancellation & E₆
+  paper3_computational      Companion to Paper 3: Computational Study
+  E5_Exploration            E₅ deep dive (uses QuasiShuffleAlgebra)
+  QuasiShuffleAlgebra_Guide Package API guide
+
+scripts/                    Standalone derivation and verification scripts
+  extract_e5.jl             E₅ extraction via prime evaluation matrix
+  find_e5_direct.jl         Direct null-space search for E₅
+  fit_macmahon.jl           Closed-form fitting for M₄, M₅, M₆
+  verify_e5.jl              Independent verification of E₅
+
+Paper/                      LaTeX sources for the three papers
+Extend.md                   Implementation notes and mathematical background
 ```
 
 ## Quick Start
