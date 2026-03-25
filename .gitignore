@@ -25,4 +25,5 @@ Paper/archive/
 
 # Compiled documents
 *.pdf
+!Paper/*.pdf
 *.docx
