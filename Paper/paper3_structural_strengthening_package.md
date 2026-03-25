@@ -1,10 +1,10 @@
-# Paper 2 structural strengthening package
+# Paper 3 structural strengthening package
 
 This package contains two insertion-ready components for the recovery paper.
 
 ## Included files
 
-1. `paper2_section4_full_spanning_statement.tex`  
+1. `paper3_section4_full_spanning_statement.tex`  
    Contains:
    - the definition of `O_d`,
    - a lemma showing `E_d` is polynomial on primes,
@@ -14,7 +14,7 @@ This package contains two insertion-ready components for the recovery paper.
      `O_d = Span([tau], [p tau], ..., [p^(d+1) tau])`
      with dimension `d+2`.
 
-2. `paper2_section5_minimality_rewrite.tex`  
+2. `paper3_section5_minimality_rewrite.tex`  
    Contains a rewrite of Section 5 that:
    - uses the stronger Section 4 result,
    - separates structural and computational content,

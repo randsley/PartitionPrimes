@@ -34,9 +34,9 @@ QuasiShuffleAlgebra/        Julia package (full implementation)
 
 notebooks/                  Jupyter notebooks (Julia kernel)
   PartitionPrimes_Tutorial  Introductory tutorial (uses partition_primes.jl)
-  paper1_obstruction        Companion to Paper 1: Weight-12 Cusp Obstruction
-  paper2_recovery           Companion to Paper 2: Cusp Cancellation & E₆
-  paper3_computational      Companion to Paper 3: Computational Study
+  paper3_computational      Companion to Paper 1: Computational Study
+  paper1_obstruction        Companion to Paper 2: Weight-12 Cusp Obstruction
+  paper2_recovery           Companion to Paper 3: Cusp Cancellation & E₆
   E5_Exploration            E₅ deep dive (uses QuasiShuffleAlgebra)
   QuasiShuffleAlgebra_Guide Package API guide
 
@@ -124,15 +124,15 @@ Proc. Natl. Acad. Sci. USA **121**, e2409816121.
 [2] Randsley, N. (2025).
 *Extending Partition-Theoretic Prime Detection: A Computational Study of the Weight-12
 Barrier, the Expression $E_5$, and a Basis-Dependent Recovery of $E_6$.*
-(Paper 3 — main computational paper)
+(Paper 1 — main computational paper)
 
 [3] Randsley, N. (2025).
 *The Weight-12 Cusp Obstruction in Partition-Theoretic Prime Detection.*
-(Paper 1 — obstruction theorem)
+(Paper 2 — obstruction theorem)
 
 [4] Randsley, N. (2025).
 *Cusp Cancellation and the First Recovery of Prime-Vanishing Relations Beyond Weight 12.*
-(Paper 2 — recovery of $E_6$)
+(Paper 3 — recovery of $E_6$)
 
 ### Additional references
 
