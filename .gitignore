@@ -7,7 +7,9 @@
 # Julia
 Manifest.toml
 
-# LaTeX build artifacts
+# LaTeX sources and build artifacts
+Paper/*.tex
+Paper/archive/
 *.aux
 *.log
 *.toc
